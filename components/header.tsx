@@ -43,14 +43,20 @@ export function Header() {
         </div>
 
         {/* Mobile Menu Button */}
-        <button className="md:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} aria-label="Toggle menu">
+        <button
+          className="md:hidden"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label="Toggle menu"
+          aria-expanded={mobileMenuOpen}
+          aria-controls="mobile-menu"
+        >
           {mobileMenuOpen ? <X className="h-6 w-6 text-foreground" /> : <Menu className="h-6 w-6 text-foreground" />}
         </button>
       </div>
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="border-t border-border bg-background md:hidden">
+        <div id="mobile-menu" className="border-t border-border bg-background md:hidden">
           <nav className="container mx-auto flex flex-col gap-4 px-4 py-6">
             <Link
               href="/"
