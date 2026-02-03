@@ -6,53 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import { ShieldCheck, Sparkles, Leaf, Award, Star, ArrowRight } from "lucide-react"
 import Image from "next/image"
-
-const featuredProducts = [
-  {
-    id: 1,
-    name: "Serum Vitamin C Dưỡng Sáng Da",
-    description: "Làm sáng và đều màu da một cách tự nhiên",
-    skinType: "Mọi loại da",
-    image: "/vitamin-c-serum.jpg",
-    tag: "Bán chạy",
-    originalPrice: 850000,
-    discountedPrice: 680000,
-    discount: 20,
-  },
-  {
-    id: 2,
-    name: "Kem Dưỡng Ẩm Chiết Xuất Hoa Hồng",
-    description: "Cấp ẩm sâu với chiết xuất hoa hồng hữu cơ",
-    skinType: "Da khô",
-    image: "/rose-face-cream.jpg",
-    tag: "Mới",
-    originalPrice: 1200000,
-    discountedPrice: 960000,
-    discount: 20,
-  },
-  {
-    id: 3,
-    name: "Sữa Rửa Mặt Dịu Nhẹ",
-    description: "Làm sạch nhẹ nhàng không làm khô da",
-    skinType: "Da nhạy cảm",
-    image: "/cleansing-foam.jpg",
-    tag: "Phổ biến",
-    originalPrice: 450000,
-    discountedPrice: 360000,
-    discount: 20,
-  },
-  {
-    id: 4,
-    name: "Son Dưỡng Màu Tự Nhiên",
-    description: "Màu nhẹ nhàng với thành phần dưỡng chất",
-    skinType: "Mọi loại",
-    image: "/lip-tint.jpg",
-    tag: "Hữu cơ",
-    originalPrice: 320000,
-    discountedPrice: 256000,
-    discount: 20,
-  },
-]
+import { featuredProducts } from "@/lib/products"
 
 const features = [
   {
