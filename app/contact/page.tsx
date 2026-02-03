@@ -52,10 +52,10 @@ export default function ContactPage() {
           <div className="container mx-auto px-4 py-12">
             <div className="max-w-3xl mx-auto text-center space-y-4">
               <h1 className="text-4xl font-bold tracking-tight text-foreground md:text-5xl text-balance">
-                Contact Us to Order
+                Liên hệ Dewy để tư vấn & đặt hàng
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed text-pretty">
-                Fill out the form below and we'll confirm your order via email within 24 hours
+                Điền thông tin bên dưới và chúng tôi sẽ xác nhận đơn hàng mỹ phẩm hữu cơ qua thư điện tử trong vòng 24 giờ
               </p>
             </div>
           </div>
@@ -68,10 +68,10 @@ export default function ContactPage() {
               {/* Contact Information */}
               <div className="space-y-8">
                 <div className="space-y-4">
-                  <h2 className="text-2xl font-bold text-foreground">Get in Touch</h2>
+                  <h2 className="text-2xl font-bold text-foreground">Kết nối với Dewy</h2>
                   <p className="text-muted-foreground leading-relaxed">
-                    Have questions or ready to place an order? We're here to help! Reach out via the form or contact us
-                    directly.
+                    Bạn có câu hỏi về mỹ phẩm hữu cơ hoặc sẵn sàng đặt hàng? Dewy luôn ở đây để hỗ trợ! Hãy liên hệ qua
+                    biểu mẫu hoặc gọi trực tiếp.
                   </p>
                 </div>
 
@@ -83,12 +83,12 @@ export default function ContactPage() {
                           <Mail className="h-6 w-6 text-primary" />
                         </div>
                         <div className="space-y-1">
-                          <p className="font-semibold text-foreground">Email</p>
+                          <p className="font-semibold text-foreground">Thư điện tử</p>
                           <a
-                            href="mailto:info@ecoshop.com"
+                            href="mailto:info@dewy.com"
                             className="text-sm text-muted-foreground hover:text-primary transition-colors"
                           >
-                            info@ecoshop.com
+                            info@dewy.com
                           </a>
                         </div>
                       </div>
@@ -102,7 +102,7 @@ export default function ContactPage() {
                           <Phone className="h-6 w-6 text-primary" />
                         </div>
                         <div className="space-y-1">
-                          <p className="font-semibold text-foreground">Phone</p>
+                          <p className="font-semibold text-foreground">Điện thoại</p>
                           <a
                             href="tel:+1234567890"
                             className="text-sm text-muted-foreground hover:text-primary transition-colors"
@@ -121,8 +121,8 @@ export default function ContactPage() {
                           <MapPin className="h-6 w-6 text-primary" />
                         </div>
                         <div className="space-y-1">
-                          <p className="font-semibold text-foreground">Address</p>
-                          <p className="text-sm text-muted-foreground">123 Green Street, Eco City, EC 12345</p>
+                          <p className="font-semibold text-foreground">Địa chỉ</p>
+                          <p className="text-sm text-muted-foreground">123 Đường Ánh Sáng, Quận 1, TP. Hồ Chí Minh</p>
                         </div>
                       </div>
                     </CardContent>
@@ -132,19 +132,19 @@ export default function ContactPage() {
                 <Card className="border-primary/20 bg-primary/5">
                   <CardContent className="pt-6">
                     <div className="space-y-3">
-                      <h3 className="font-semibold text-foreground">Business Hours</h3>
+                      <h3 className="font-semibold text-foreground">Giờ làm việc</h3>
                       <div className="space-y-2 text-sm text-muted-foreground">
                         <div className="flex justify-between">
-                          <span>Monday - Friday:</span>
-                          <span className="font-medium text-foreground">9:00 AM - 6:00 PM</span>
+                          <span>Thứ Hai - Thứ Sáu:</span>
+                          <span className="font-medium text-foreground">9:00 - 18:00</span>
                         </div>
                         <div className="flex justify-between">
-                          <span>Saturday:</span>
-                          <span className="font-medium text-foreground">10:00 AM - 4:00 PM</span>
+                          <span>Thứ Bảy:</span>
+                          <span className="font-medium text-foreground">10:00 - 16:00</span>
                         </div>
                         <div className="flex justify-between">
-                          <span>Sunday:</span>
-                          <span className="font-medium text-foreground">Closed</span>
+                          <span>Chủ Nhật:</span>
+                          <span className="font-medium text-foreground">Đóng cửa</span>
                         </div>
                       </div>
                     </div>
@@ -160,13 +160,13 @@ export default function ContactPage() {
                       <div className="grid gap-6 sm:grid-cols-2">
                         <div className="space-y-2">
                           <Label htmlFor="fullName" className="text-foreground">
-                            Full Name <span className="text-destructive">*</span>
+                            Họ và tên <span className="text-destructive">*</span>
                           </Label>
                           <Input
                             id="fullName"
                             name="fullName"
                             type="text"
-                            placeholder="John Doe"
+                            placeholder="Nguyễn Văn A"
                             value={formData.fullName}
                             onChange={handleChange}
                             required
@@ -176,13 +176,13 @@ export default function ContactPage() {
 
                         <div className="space-y-2">
                           <Label htmlFor="phone" className="text-foreground">
-                            Phone Number <span className="text-destructive">*</span>
+                            Số điện thoại <span className="text-destructive">*</span>
                           </Label>
                           <Input
                             id="phone"
                             name="phone"
                             type="tel"
-                            placeholder="+1 (234) 567-890"
+                            placeholder="+84 912 345 678"
                             value={formData.phone}
                             onChange={handleChange}
                             required
@@ -193,13 +193,13 @@ export default function ContactPage() {
 
                       <div className="space-y-2">
                         <Label htmlFor="email" className="text-foreground">
-                          Email Address <span className="text-destructive">*</span>
+                          Địa chỉ thư điện tử <span className="text-destructive">*</span>
                         </Label>
                         <Input
                           id="email"
                           name="email"
                           type="email"
-                          placeholder="john@example.com"
+                          placeholder="ban@vi.du"
                           value={formData.email}
                           onChange={handleChange}
                           required
@@ -210,13 +210,13 @@ export default function ContactPage() {
                       <div className="grid gap-6 sm:grid-cols-2">
                         <div className="space-y-2">
                           <Label htmlFor="productName" className="text-foreground">
-                            Product Name <span className="text-destructive">*</span>
+                            Tên sản phẩm mỹ phẩm <span className="text-destructive">*</span>
                           </Label>
                           <Input
                             id="productName"
                             name="productName"
                             type="text"
-                            placeholder="e.g., Bamboo Utensil Set"
+                            placeholder="Ví dụ: Serum Vitamin C"
                             value={formData.productName}
                             onChange={handleChange}
                             required
@@ -226,7 +226,7 @@ export default function ContactPage() {
 
                         <div className="space-y-2">
                           <Label htmlFor="quantity" className="text-foreground">
-                            Quantity <span className="text-destructive">*</span>
+                            Số lượng <span className="text-destructive">*</span>
                           </Label>
                           <Input
                             id="quantity"
@@ -244,12 +244,12 @@ export default function ContactPage() {
 
                       <div className="space-y-2">
                         <Label htmlFor="message" className="text-foreground">
-                          Message / Notes
+                          Lời nhắn / Ghi chú về tình trạng da
                         </Label>
                         <Textarea
                           id="message"
                           name="message"
-                          placeholder="Any special requests or questions about your order..."
+                          placeholder="Loại da, vấn đề da, hoặc nhu cầu chăm sóc cụ thể..."
                           value={formData.message}
                           onChange={handleChange}
                           rows={5}
@@ -264,10 +264,10 @@ export default function ContactPage() {
                           className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
                         >
                           <Send className="mr-2 h-5 w-5" />
-                          Send Order Request
+                          Gửi yêu cầu đặt hàng
                         </Button>
                         <p className="text-sm text-center text-muted-foreground leading-relaxed">
-                          We will confirm your order via email within 24 hours
+                          Chúng tôi sẽ xác nhận đơn hàng mỹ phẩm hữu cơ qua thư điện tử trong vòng 24 giờ
                         </p>
                       </div>
                     </form>
