@@ -10,15 +10,15 @@ export const faqGroups = [
       {
         cau_hoi: "Sản phẩm hết hàng thì xử lý thế nào?",
         tra_loi:
-          "Bạn có thể chuyển sang gửi yêu cầu sourcing để chúng tôi tìm sản phẩm tương tự từ Hàn Quốc.",
+          "Bạn có thể chuyển sang gửi yêu cầu tìm theo yêu cầu để chúng tôi tìm sản phẩm tương tự từ Hàn Quốc.",
       },
     ],
   },
   {
-    nhom: "Sourcing",
+    nhom: "Tìm theo yêu cầu",
     items: [
       {
-        cau_hoi: "Gửi yêu cầu sourcing cần thông tin gì?",
+        cau_hoi: "Gửi yêu cầu tìm theo yêu cầu cần thông tin gì?",
         tra_loi:
           "Bạn nên cung cấp tên sản phẩm, thương hiệu, link hoặc ảnh tham khảo để tăng tốc độ xử lý.",
       },
@@ -62,9 +62,9 @@ export const faqGroups = [
         tra_loi: "Có. Vui lòng gửi yêu cầu hỗ trợ trong vòng 48 giờ kèm hình ảnh sản phẩm.",
       },
       {
-        cau_hoi: "Đơn sourcing có áp dụng đổi trả không?",
+        cau_hoi: "Đơn tìm theo yêu cầu có áp dụng đổi trả không?",
         tra_loi:
-          "Với đơn sourcing, chính sách xử lý sẽ được thông báo rõ trong bước xác nhận báo giá trước khi đặt.",
+          "Với đơn tìm theo yêu cầu, chính sách xử lý sẽ được thông báo rõ trong bước xác nhận báo giá trước khi đặt.",
       },
     ],
   },

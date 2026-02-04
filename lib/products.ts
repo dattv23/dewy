@@ -179,7 +179,7 @@ const productsData: ProductDetailDTO[] = [
     gia_ban: 310000,
     gia_goc: 360000,
     tinh_trang: "dat_sourcing",
-    tags: ["Đặt sourcing"],
+    tags: ["Tìm theo yêu cầu"],
     anh_chinh: "/mascara.jpg",
     danh_muc_slug: "trang-diem",
     thuong_hieu: "Kiss Me",
@@ -315,7 +315,7 @@ export function statusLabel(status: TinhTrangSanPham) {
     case "het_hang":
       return "Hết hàng"
     case "dat_sourcing":
-      return "Đặt sourcing"
+      return "Tìm theo yêu cầu"
     default:
       return "Đang cập nhật"
   }

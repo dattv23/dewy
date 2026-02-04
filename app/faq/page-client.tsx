@@ -32,7 +32,7 @@ export function FAQClient() {
       <main className="flex-1">
         <section className="border-b bg-secondary/30">
           <div className="mx-auto w-full max-w-6xl px-4 py-6">
-            <h1 className="text-[28px] font-bold leading-[1.25]">FAQ mua hàng và yêu cầu sourcing</h1>
+            <h1 className="text-[28px] font-bold leading-[1.25]">FAQ mua hàng và tìm theo yêu cầu</h1>
             <p className="mt-2 text-sm text-muted-foreground">
               Chỉ bao gồm thông tin liên quan đến đặt mua, yêu cầu mỹ phẩm Hàn, thanh toán và vận chuyển.
             </p>

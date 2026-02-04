@@ -8,7 +8,7 @@ export function Footer() {
           <div>
             <p className="text-sm font-semibold text-foreground">Mua nhanh mỹ phẩm Hàn</p>
             <p className="mt-2 text-sm text-muted-foreground">
-              Chỉ tập trung vào sản phẩm, yêu cầu sourcing và theo dõi trạng thái đơn/yêu cầu.
+              Chỉ tập trung vào sản phẩm, yêu cầu tìm theo yêu cầu và theo dõi trạng thái đơn/yêu cầu.
             </p>
           </div>
           <div className="grid grid-cols-2 gap-2 text-sm">
@@ -19,7 +19,7 @@ export function Footer() {
               Giỏ hàng
             </Link>
             <Link href="/yeu-cau-my-pham-han" className="text-muted-foreground hover:text-primary">
-              Yêu cầu sourcing
+              Tìm theo yêu cầu
             </Link>
             <Link href="/tra-cuu" className="text-muted-foreground hover:text-primary">
               Tra cứu

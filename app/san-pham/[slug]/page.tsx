@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   return {
     title: `${product.ten} | Giá, công dụng, cách dùng`,
-    description: `Xem chi tiết ${product.ten}: mô tả ngắn, công dụng chính, cách dùng, lưu ý và lựa chọn đặt mua/sourcing.`,
+    description: `Xem chi tiết ${product.ten}: mô tả ngắn, công dụng chính, cách dùng, lưu ý và lựa chọn đặt mua hoặc tìm theo yêu cầu.`,
   }
 }
 
@@ -122,7 +122,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
             <AddCartButton product={cardProduct} disabled={product.tinh_trang === "het_hang"} />
 
             <Button asChild variant="ghost" className="h-11 rounded-lg px-0 text-primary hover:bg-transparent hover:underline">
-              <Link href="/yeu-cau-my-pham-han">Không thấy sản phẩm tương tự? Gửi yêu cầu sourcing</Link>
+              <Link href="/yeu-cau-my-pham-han">Không thấy sản phẩm tương tự? Gửi yêu cầu tìm theo yêu cầu</Link>
             </Button>
 
             <div className="rounded-xl border bg-card p-4">

@@ -34,7 +34,7 @@ export function TrackingPageClient() {
       <main className="flex-1">
         <section className="border-b bg-secondary/30">
           <div className="mx-auto w-full max-w-6xl px-4 py-6">
-            <h1 className="text-[28px] font-bold leading-[1.25]">Tra cứu đơn hàng và yêu cầu sourcing</h1>
+            <h1 className="text-[28px] font-bold leading-[1.25]">Tra cứu đơn hàng và tìm theo yêu cầu</h1>
             <p className="mt-2 text-sm text-muted-foreground">Nhập mã tra cứu và số điện thoại để xem trạng thái mới nhất.</p>
           </div>
         </section>
@@ -62,7 +62,7 @@ export function TrackingPageClient() {
                   setRecord(null)
                 }}
               >
-                Yêu cầu sourcing
+                Tìm theo yêu cầu
               </Button>
             </div>
 

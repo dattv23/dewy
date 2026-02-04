@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { categories, featuredProducts } from "@/lib/products"
 
 export const metadata: Metadata = {
-  title: "Mỹ phẩm Hàn Quốc chính hãng | Mua nhanh & Gửi yêu cầu sourcing",
+  title: "Mỹ phẩm Hàn Quốc chính hãng | Mua nhanh & Tìm theo yêu cầu",
   description:
     "Mua mỹ phẩm Hàn có sẵn hoặc gửi yêu cầu tìm sản phẩm theo nhu cầu. Giao diện đặt mua nhanh, tra cứu trạng thái minh bạch.",
 }
@@ -21,7 +21,7 @@ const faqShort = [
     a: "Bạn vào trang Yêu cầu mỹ phẩm Hàn và gửi tên/link/ảnh sản phẩm.",
   },
   {
-    q: "Bao lâu nhận phản hồi sourcing?",
+    q: "Bao lâu nhận phản hồi yêu cầu tìm sản phẩm?",
     a: "Trong khoảng 4-24 giờ làm việc.",
   },
   {
@@ -45,7 +45,7 @@ export default function HomePage() {
                 Mỹ phẩm Hàn phù hợp với bạn, đặt mua nhanh trong vài bước.
               </h1>
               <p className="text-[15px] text-muted-foreground">
-                Chọn sản phẩm có sẵn hoặc gửi yêu cầu sourcing mỹ phẩm từ Hàn Quốc. Theo dõi trạng thái minh bạch.
+                Chọn sản phẩm có sẵn hoặc gửi yêu cầu tìm sản phẩm mỹ phẩm từ Hàn Quốc. Theo dõi trạng thái minh bạch.
               </p>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <Button asChild className="h-11 rounded-lg">
@@ -102,7 +102,7 @@ export default function HomePage() {
 
         <section className="border-y bg-secondary/40 py-8 md:py-12">
           <div className="mx-auto w-full max-w-6xl px-4">
-            <h2 className="text-[22px] font-bold leading-[1.35]">Yêu cầu sourcing trong 3 bước</h2>
+            <h2 className="text-[22px] font-bold leading-[1.35]">Tìm theo yêu cầu trong 3 bước</h2>
             <div className="mt-5 grid gap-4 md:grid-cols-3">
               {[
                 "1. Gửi yêu cầu với tên, link hoặc ảnh sản phẩm.",

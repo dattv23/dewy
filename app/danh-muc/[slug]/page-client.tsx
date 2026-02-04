@@ -216,7 +216,7 @@ export function CategoryPageClient({ slug, initialQuery }: CategoryPageClientPro
               <div className="rounded-xl border bg-card p-6 text-center">
                 <p className="text-[15px] font-medium">Không tìm thấy sản phẩm phù hợp bộ lọc.</p>
                 <p className="mt-2 text-sm text-muted-foreground">
-                  Bạn có thể gửi yêu cầu sourcing để được hỗ trợ tìm sản phẩm từ Hàn Quốc.
+                  Bạn có thể gửi yêu cầu tìm theo yêu cầu để được hỗ trợ tìm sản phẩm từ Hàn Quốc.
                 </p>
                 <Button asChild className="mt-4 h-11 rounded-lg">
                   <Link href="/yeu-cau-my-pham-han">Gửi yêu cầu mỹ phẩm Hàn</Link>

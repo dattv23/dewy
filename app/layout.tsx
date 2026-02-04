@@ -11,7 +11,7 @@ const beVietnamPro = Be_Vietnam_Pro({
 })
 
 export const metadata: Metadata = {
-  title: "Mỹ phẩm Hàn Quốc chính hãng | Mua nhanh & Gửi yêu cầu sourcing",
+  title: "Mỹ phẩm Hàn Quốc chính hãng | Mua nhanh & Tìm theo yêu cầu",
   description:
     "Mua mỹ phẩm Hàn có sẵn hoặc gửi yêu cầu tìm sản phẩm theo nhu cầu. Giao diện đặt mua nhanh, tra cứu trạng thái minh bạch.",
   icons: {
