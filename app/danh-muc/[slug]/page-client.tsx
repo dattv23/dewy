@@ -104,15 +104,15 @@ export function CategoryPageClient({ slug, initialQuery }: CategoryPageClientPro
               </Link>{" "}
               / <span className="text-foreground">{category.ten}</span>
             </p>
-            <h1 className="mt-2 text-[28px] font-bold leading-[1.25]">{category.ten}</h1>
-            <p className="mt-2 text-sm text-muted-foreground">{category.mo_ta}</p>
+            <h1 className="mt-2 break-words text-[26px] font-bold leading-[1.25] sm:text-[30px]">{category.ten}</h1>
+            <p className="mt-2 break-words text-sm text-muted-foreground">{category.mo_ta}</p>
             <p className="mt-2 text-sm text-muted-foreground">{filtered.length} sản phẩm</p>
           </div>
         </section>
 
         <section className="border-b">
-          <div className="mx-auto grid w-full max-w-6xl gap-3 px-4 py-4 md:grid-cols-[1fr_180px_auto]">
-            <div className="relative">
+          <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 px-4 py-4 sm:flex-row sm:flex-wrap sm:items-center">
+            <div className="relative min-w-0 flex-1">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 value={query}
@@ -121,18 +121,19 @@ export function CategoryPageClient({ slug, initialQuery }: CategoryPageClientPro
                   setPage(1)
                 }}
                 placeholder="Tìm theo tên sản phẩm, công dụng, thương hiệu..."
-                className="h-11 rounded-lg pl-10 text-[15px]"
+                className="h-11 w-full rounded-lg pl-10 text-[15px]"
+                aria-label="Tìm kiếm sản phẩm theo tên, công dụng hoặc thương hiệu"
               />
             </div>
 
             <select
-              className="h-11 rounded-lg border bg-card px-3 text-sm"
+              className="h-11 w-full rounded-lg border bg-card px-3 text-sm sm:w-52"
               value={selectedSort}
               onChange={(event) => {
                 setSelectedSort(event.target.value as (typeof sortOptions)[number]["value"])
                 setPage(1)
               }}
-              aria-label="Sắp xếp"
+              aria-label="Sắp xếp sản phẩm"
             >
               {sortOptions.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -143,12 +144,12 @@ export function CategoryPageClient({ slug, initialQuery }: CategoryPageClientPro
 
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="outline" className="h-11 rounded-lg md:hidden">
+                <Button variant="outline" className="h-11 w-full rounded-lg sm:w-auto md:hidden" aria-label="Mở bộ lọc">
                   <Filter className="h-4 w-4" />
                   Bộ lọc
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[85%] max-w-sm">
+              <SheetContent side="left" className="w-[92%] max-w-sm overflow-y-auto">
                 <SheetHeader>
                   <SheetTitle>Bộ lọc</SheetTitle>
                 </SheetHeader>
@@ -179,8 +180,8 @@ export function CategoryPageClient({ slug, initialQuery }: CategoryPageClientPro
           </div>
         </section>
 
-        <section className="mx-auto grid w-full max-w-6xl gap-4 px-4 py-6 md:grid-cols-[220px_1fr]">
-          <aside className="hidden rounded-xl border bg-card p-4 md:block">
+        <section className="mx-auto grid w-full max-w-6xl gap-4 px-4 py-6 md:grid-cols-[230px_minmax(0,1fr)] lg:gap-5">
+          <aside className="hidden rounded-2xl border bg-card p-4 md:block">
             <FilterPanel
               selectedStatus={selectedStatus}
               selectedSkinType={selectedSkinType}
@@ -205,7 +206,7 @@ export function CategoryPageClient({ slug, initialQuery }: CategoryPageClientPro
             />
           </aside>
 
-          <div>
+          <div className="min-w-0">
             {paginated.length === 0 ? (
               <div className="rounded-xl border bg-card p-6 text-center">
                 <p className="text-[15px] font-medium">Không tìm thấy sản phẩm phù hợp bộ lọc.</p>
@@ -218,7 +219,7 @@ export function CategoryPageClient({ slug, initialQuery }: CategoryPageClientPro
               </div>
             ) : (
               <>
-                <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
                   {paginated.map((product) => (
                     <ProductCard key={product.id} product={product} showCategory={category.ten} />
                   ))}
@@ -313,13 +314,14 @@ function FilterPanel({
   ]
 
   return (
-    <div className="space-y-4">
+    <div className="min-w-0 space-y-4">
       <div>
         <p className="text-sm font-semibold">Loại da</p>
         <select
           value={selectedSkinType}
           onChange={(event) => onSkinTypeChange(event.target.value)}
-          className="mt-2 h-10 w-full rounded-lg border bg-card px-3 text-sm"
+          className="mt-2 h-11 w-full rounded-lg border bg-card px-3 text-sm"
+          aria-label="Lọc theo loại da"
         >
           <option value="tat_ca">Tất cả</option>
           {availableSkinTypes.map((item) => (
@@ -335,7 +337,8 @@ function FilterPanel({
         <select
           value={selectedPriceRange}
           onChange={(event) => onPriceRangeChange(event.target.value)}
-          className="mt-2 h-10 w-full rounded-lg border bg-card px-3 text-sm"
+          className="mt-2 h-11 w-full rounded-lg border bg-card px-3 text-sm"
+          aria-label="Lọc theo mức giá"
         >
           <option value="tat_ca">Tất cả</option>
           <option value="duoi_300">Dưới 300.000đ</option>
@@ -349,7 +352,8 @@ function FilterPanel({
         <select
           value={selectedBrand}
           onChange={(event) => onBrandChange(event.target.value)}
-          className="mt-2 h-10 w-full rounded-lg border bg-card px-3 text-sm"
+          className="mt-2 h-11 w-full rounded-lg border bg-card px-3 text-sm"
+          aria-label="Lọc theo thương hiệu"
         >
           <option value="tat_ca">Tất cả</option>
           {availableBrands.map((item) => (
@@ -365,7 +369,8 @@ function FilterPanel({
         <select
           value={selectedBenefit}
           onChange={(event) => onBenefitChange(event.target.value)}
-          className="mt-2 h-10 w-full rounded-lg border bg-card px-3 text-sm"
+          className="mt-2 h-11 w-full rounded-lg border bg-card px-3 text-sm"
+          aria-label="Lọc theo công dụng"
         >
           <option value="tat_ca">Tất cả</option>
           {availableBenefits.map((item) => (
@@ -380,7 +385,12 @@ function FilterPanel({
         <p className="text-sm font-semibold">Tình trạng</p>
         <div className="mt-2 space-y-2">
           {statuses.map((status) => (
-            <label key={status.value} className="flex items-center gap-2 text-sm">
+            <label
+              key={status.value}
+              className={`flex min-h-11 cursor-pointer items-center gap-2 rounded-lg border px-3 text-sm ${
+                selectedStatus === status.value ? "border-primary bg-primary/5 text-primary" : "border-border"
+              }`}
+            >
               <input
                 type="radio"
                 name="status"
@@ -393,10 +403,10 @@ function FilterPanel({
           ))}
         </div>
       </div>
-      <Button type="button" variant="default" className="h-10 w-full rounded-lg">
+      <Button type="button" variant="default" className="h-11 w-full rounded-lg">
         Áp dụng
       </Button>
-      <Button type="button" variant="outline" className="h-10 w-full rounded-lg" onClick={onReset}>
+      <Button type="button" variant="outline" className="h-11 w-full rounded-lg" onClick={onReset}>
         Xóa bộ lọc
       </Button>
     </div>
