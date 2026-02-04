@@ -149,11 +149,15 @@ export function CategoryPageClient({ slug, initialQuery }: CategoryPageClientPro
                   Bộ lọc
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[92%] max-w-sm overflow-y-auto">
-                <SheetHeader>
-                  <SheetTitle>Bộ lọc</SheetTitle>
+              <SheetContent
+                side="left"
+                className="w-[92%] max-w-sm gap-0 overflow-hidden rounded-r-2xl border-r border-border bg-card shadow-xl"
+              >
+                <SheetHeader className="border-b border-border px-5 pb-4 pt-5">
+                  <SheetTitle className="text-base font-semibold">Bộ lọc</SheetTitle>
                 </SheetHeader>
-                <FilterPanel
+                <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-5 pr-3 pt-4 sm:px-5 sm:pb-6 sm:pr-4">
+                  <FilterPanel
                   selectedStatus={selectedStatus}
                   selectedSkinType={selectedSkinType}
                   selectedPriceRange={selectedPriceRange}
@@ -174,7 +178,8 @@ export function CategoryPageClient({ slug, initialQuery }: CategoryPageClientPro
                     setSelectedBrand("tat_ca")
                     setSelectedBenefit("tat_ca")
                   }}
-                />
+                  />
+                </div>
               </SheetContent>
             </Sheet>
           </div>
@@ -314,13 +319,13 @@ function FilterPanel({
   ]
 
   return (
-    <div className="min-w-0 space-y-4">
-      <div>
-        <p className="text-sm font-semibold">Loại da</p>
+    <div className="min-w-0 space-y-4 pb-2">
+      <div className="rounded-xl border border-border/70 bg-secondary/20 p-3.5">
+        <p className="text-[13px] font-semibold tracking-wide text-foreground/90">Loại da</p>
         <select
           value={selectedSkinType}
           onChange={(event) => onSkinTypeChange(event.target.value)}
-          className="mt-2 h-11 w-full rounded-lg border bg-card px-3 text-sm"
+          className="mt-2 h-11 w-full appearance-none rounded-lg border border-border bg-card px-3.5 text-sm"
           aria-label="Lọc theo loại da"
         >
           <option value="tat_ca">Tất cả</option>
@@ -332,12 +337,12 @@ function FilterPanel({
         </select>
       </div>
 
-      <div>
-        <p className="text-sm font-semibold">Mức giá</p>
+      <div className="rounded-xl border border-border/70 bg-secondary/20 p-3.5">
+        <p className="text-[13px] font-semibold tracking-wide text-foreground/90">Mức giá</p>
         <select
           value={selectedPriceRange}
           onChange={(event) => onPriceRangeChange(event.target.value)}
-          className="mt-2 h-11 w-full rounded-lg border bg-card px-3 text-sm"
+          className="mt-2 h-11 w-full appearance-none rounded-lg border border-border bg-card px-3.5 text-sm"
           aria-label="Lọc theo mức giá"
         >
           <option value="tat_ca">Tất cả</option>
@@ -347,12 +352,12 @@ function FilterPanel({
         </select>
       </div>
 
-      <div>
-        <p className="text-sm font-semibold">Thương hiệu</p>
+      <div className="rounded-xl border border-border/70 bg-secondary/20 p-3.5">
+        <p className="text-[13px] font-semibold tracking-wide text-foreground/90">Thương hiệu</p>
         <select
           value={selectedBrand}
           onChange={(event) => onBrandChange(event.target.value)}
-          className="mt-2 h-11 w-full rounded-lg border bg-card px-3 text-sm"
+          className="mt-2 h-11 w-full appearance-none rounded-lg border border-border bg-card px-3.5 text-sm"
           aria-label="Lọc theo thương hiệu"
         >
           <option value="tat_ca">Tất cả</option>
@@ -364,12 +369,12 @@ function FilterPanel({
         </select>
       </div>
 
-      <div>
-        <p className="text-sm font-semibold">Công dụng</p>
+      <div className="rounded-xl border border-border/70 bg-secondary/20 p-3.5">
+        <p className="text-[13px] font-semibold tracking-wide text-foreground/90">Công dụng</p>
         <select
           value={selectedBenefit}
           onChange={(event) => onBenefitChange(event.target.value)}
-          className="mt-2 h-11 w-full rounded-lg border bg-card px-3 text-sm"
+          className="mt-2 h-11 w-full appearance-none rounded-lg border border-border bg-card px-3.5 text-sm"
           aria-label="Lọc theo công dụng"
         >
           <option value="tat_ca">Tất cả</option>
@@ -381,19 +386,20 @@ function FilterPanel({
         </select>
       </div>
 
-      <div>
-        <p className="text-sm font-semibold">Tình trạng</p>
-        <div className="mt-2 space-y-2">
+      <div className="rounded-xl border border-border/70 bg-secondary/20 p-3.5">
+        <p className="text-[13px] font-semibold tracking-wide text-foreground/90">Tình trạng</p>
+        <div className="mt-2.5 space-y-2.5">
           {statuses.map((status) => (
             <label
               key={status.value}
-              className={`flex min-h-11 cursor-pointer items-center gap-2 rounded-lg border px-3 text-sm ${
-                selectedStatus === status.value ? "border-primary bg-primary/5 text-primary" : "border-border"
+              className={`flex min-h-11 cursor-pointer items-center gap-2.5 rounded-lg border bg-card px-3 text-sm transition-colors ${
+                selectedStatus === status.value ? "border-primary bg-primary/10 text-primary" : "border-border text-foreground"
               }`}
             >
               <input
                 type="radio"
                 name="status"
+                className="h-4 w-4 shrink-0 accent-primary"
                 value={status.value}
                 checked={selectedStatus === status.value}
                 onChange={(event) => onStatusChange(event.target.value)}
@@ -403,12 +409,14 @@ function FilterPanel({
           ))}
         </div>
       </div>
-      <Button type="button" variant="default" className="h-11 w-full rounded-lg">
-        Áp dụng
-      </Button>
-      <Button type="button" variant="outline" className="h-11 w-full rounded-lg" onClick={onReset}>
-        Xóa bộ lọc
-      </Button>
+      <div className="space-y-2 border-t border-border/70 pt-3">
+        <Button type="button" variant="default" className="h-11 w-full rounded-lg">
+          Áp dụng
+        </Button>
+        <Button type="button" variant="outline" className="h-11 w-full rounded-lg" onClick={onReset}>
+          Xóa bộ lọc
+        </Button>
+      </div>
     </div>
   )
 }
