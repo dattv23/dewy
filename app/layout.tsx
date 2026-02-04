@@ -1,18 +1,19 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter, Playfair_Display, Geist_Mono } from "next/font/google"
+import { Be_Vietnam_Pro } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 
-const _inter = Inter({ subsets: ["latin"] })
-const _playfairDisplay = Playfair_Display({ subsets: ["latin"] })
-const _geistMono = Geist_Mono({ subsets: ["latin"] })
+const beVietnamPro = Be_Vietnam_Pro({
+  subsets: ["latin", "vietnamese"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-be-vietnam-pro",
+})
 
 export const metadata: Metadata = {
-  title: "PureGlow - Natural Beauty & Organic Cosmetics",
+  title: "Mỹ phẩm Hàn Quốc chính hãng | Mua nhanh & Gửi yêu cầu sourcing",
   description:
-    "Discover natural, organic cosmetics for radiant skin. Skincare, makeup, and body care products made with safe ingredients. Order via email consultation.",
-  generator: "v0.app",
+    "Mua mỹ phẩm Hàn có sẵn hoặc gửi yêu cầu tìm sản phẩm theo nhu cầu. Giao diện đặt mua nhanh, tra cứu trạng thái minh bạch.",
   icons: {
     icon: [
       {
@@ -38,8 +39,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className={`font-sans antialiased`}>
+    <html lang="vi">
+      <body className={`${beVietnamPro.variable} font-sans antialiased`}>
         {children}
         <Analytics />
       </body>

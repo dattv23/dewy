@@ -1,97 +1,113 @@
 "use client"
 
 import Link from "next/link"
+import { useEffect, useState } from "react"
+import { Menu, Search, ShoppingBag, X } from "lucide-react"
+import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Menu, Sparkles, X } from "lucide-react"
-import { useState } from "react"
+import { cartCount, getCartEventName, getCartItems } from "@/lib/cart"
+
+const navItems = [
+  { href: "/", label: "Trang chủ" },
+  { href: "/danh-muc/cham-soc-da", label: "Danh mục" },
+  { href: "/yeu-cau-my-pham-han", label: "Yêu cầu mỹ phẩm Hàn" },
+  { href: "/tra-cuu", label: "Tra cứu" },
+  { href: "/faq", label: "FAQ" },
+]
 
 export function Header() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const [search, setSearch] = useState("")
+  const [count, setCount] = useState(0)
+
+  useEffect(() => {
+    const updateCount = () => setCount(cartCount(getCartItems()))
+    updateCount()
+
+    window.addEventListener("storage", updateCount)
+    window.addEventListener(getCartEventName(), updateCount)
+    return () => {
+      window.removeEventListener("storage", updateCount)
+      window.removeEventListener(getCartEventName(), updateCount)
+    }
+  }, [])
+
+  const searchHref = `/danh-muc/cham-soc-da?q=${encodeURIComponent(search.trim())}`
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary">
-            <Sparkles className="h-5 w-5 text-primary-foreground" />
-          </div>
-          <span className="text-xl font-serif font-bold text-foreground">PureGlow</span>
+    <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur">
+      <div className="mx-auto flex h-16 w-full max-w-6xl items-center gap-3 px-4">
+        <button
+          className="inline-flex h-11 w-11 items-center justify-center rounded-lg border md:hidden"
+          aria-label="Mở menu"
+          onClick={() => setMobileOpen((prev) => !prev)}
+        >
+          {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
+
+        <Link href="/" className="shrink-0 text-lg font-semibold text-foreground">
+          Dewy Korea
         </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden items-center gap-8 md:flex">
-          <Link href="/" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
-            Trang chủ
-          </Link>
-          <Link href="/products" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
-            Sản phẩm
-          </Link>
-          <Link href="/about" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
-            Giới thiệu
-          </Link>
-          <Link href="/faq" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
-            Câu hỏi thường gặp
-          </Link>
+        <form action={searchHref} className="hidden flex-1 md:block">
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              name="q"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Tìm theo tên sản phẩm, công dụng, thương hiệu..."
+              className="h-11 rounded-lg pl-10 text-[15px]"
+            />
+          </div>
+        </form>
+
+        <nav className="hidden items-center gap-4 md:flex">
+          {navItems.map((item) => (
+            <Link key={item.href} href={item.href} className="text-sm text-muted-foreground hover:text-primary">
+              {item.label}
+            </Link>
+          ))}
         </nav>
 
-        {/* CTA Button */}
-        <div className="hidden md:block">
-          <Button asChild className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full">
-            <Link href="/contact">Liên hệ đặt hàng</Link>
-          </Button>
-        </div>
-
-        {/* Mobile Menu Button */}
-        <button
-          className="md:hidden"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          aria-label="Toggle menu"
-          aria-expanded={mobileMenuOpen}
-          aria-controls="mobile-menu"
-        >
-          {mobileMenuOpen ? <X className="h-6 w-6 text-foreground" /> : <Menu className="h-6 w-6 text-foreground" />}
-        </button>
+        <Button asChild variant="ghost" className="relative h-11 w-11 rounded-lg p-0">
+          <Link href="/gio-hang" aria-label="Giỏ hàng">
+            <ShoppingBag className="h-5 w-5" />
+            {count > 0 && (
+              <span className="absolute -right-1 -top-1 inline-flex min-h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[11px] font-semibold text-primary-foreground">
+                {count}
+              </span>
+            )}
+          </Link>
+        </Button>
       </div>
 
-      {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div id="mobile-menu" className="border-t border-border bg-background md:hidden">
-          <nav className="container mx-auto flex flex-col gap-4 px-4 py-6">
-            <Link
-              href="/"
-              className="text-base font-medium text-foreground hover:text-primary transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Trang chủ
-            </Link>
-            <Link
-              href="/products"
-              className="text-base font-medium text-foreground hover:text-primary transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Sản phẩm
-            </Link>
-            <Link
-              href="/about"
-              className="text-base font-medium text-foreground hover:text-primary transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Giới thiệu
-            </Link>
-            <Link
-              href="/faq"
-              className="text-base font-medium text-foreground hover:text-primary transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Câu hỏi thường gặp
-            </Link>
-            <Button asChild className="bg-primary text-primary-foreground hover:bg-primary/90 w-full rounded-full">
-              <Link href="/contact" onClick={() => setMobileMenuOpen(false)}>
-                Liên hệ đặt hàng
+      {mobileOpen && (
+        <div className="border-t bg-background md:hidden">
+          <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 px-4 py-4">
+            <form action={searchHref}>
+              <div className="relative">
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  name="q"
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                  placeholder="Tìm theo tên sản phẩm, công dụng..."
+                  className="h-11 rounded-lg pl-10 text-[15px]"
+                />
+              </div>
+            </form>
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="rounded-lg px-2 py-2 text-[15px] text-foreground"
+                onClick={() => setMobileOpen(false)}
+              >
+                {item.label}
               </Link>
-            </Button>
-          </nav>
+            ))}
+          </div>
         </div>
       )}
     </header>

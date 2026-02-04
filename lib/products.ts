@@ -1,436 +1,339 @@
-export type Product = {
-  id: number
-  name: string
-  description: string
-  image: string
-  category?: string
-  tag?: string
-  originalPrice?: number
-  discountedPrice?: number
-  discount?: number
-  skinType?: string
+export type TinhTrangSanPham = "con_hang" | "sap_het" | "het_hang" | "dat_sourcing"
+
+export type ProductCardDTO = {
+  id: string
+  slug: string
+  ten: string
+  gia_ban: number
+  gia_goc?: number
+  tinh_trang: TinhTrangSanPham
+  tags: string[]
+  anh_chinh: string
+  danh_muc_slug: string
+  thuong_hieu?: string
+  loai_da?: string[]
+  cong_dung_tom_tat?: string[]
 }
 
-export type ProductDetail = Product & {
-  features: string[]
-  specifications: Record<string, string>
+export type ProductDetailDTO = ProductCardDTO & {
+  thuong_hieu: string
+  xuat_xu: string
+  dung_tich: string
+  loai_da: string[]
+  mo_ta_ngan: string
+  cong_dung: string[]
+  cach_dung: string[]
+  luu_y: string[]
 }
 
-export const featuredProducts: Product[] = [
+export type CategoryDTO = {
+  slug: string
+  ten: string
+  mo_ta: string
+  anh: string
+}
+
+export const categories: CategoryDTO[] = [
   {
-    id: 1,
-    name: "Serum Vitamin C Dưỡng Sáng Da",
-    description: "Làm sáng và đều màu da một cách tự nhiên",
-    skinType: "Mọi loại da",
-    image: "/vitamin-c-serum.jpg",
-    tag: "Bán chạy",
-    originalPrice: 850000,
-    discountedPrice: 680000,
-    discount: 20,
+    slug: "cham-soc-da",
+    ten: "Chăm sóc da",
+    mo_ta: "Serum, kem dưỡng, chống nắng và làm sạch da hằng ngày.",
+    anh: "/category-skincare.jpg",
   },
   {
-    id: 2,
-    name: "Kem Dưỡng Ẩm Chiết Xuất Hoa Hồng",
-    description: "Cấp ẩm sâu với chiết xuất hoa hồng hữu cơ",
-    skinType: "Da khô",
-    image: "/rose-face-cream.jpg",
-    tag: "Mới",
-    originalPrice: 1200000,
-    discountedPrice: 960000,
-    discount: 20,
+    slug: "trang-diem",
+    ten: "Trang điểm",
+    mo_ta: "Son, mascara, má hồng với tông màu dễ dùng cho mỗi ngày.",
+    anh: "/category-makeup.jpg",
   },
   {
-    id: 3,
-    name: "Sữa Rửa Mặt Dịu Nhẹ",
-    description: "Làm sạch nhẹ nhàng không làm khô da",
-    skinType: "Da nhạy cảm",
-    image: "/cleansing-foam.jpg",
-    tag: "Phổ biến",
-    originalPrice: 450000,
-    discountedPrice: 360000,
-    discount: 20,
-  },
-  {
-    id: 4,
-    name: "Son Dưỡng Màu Tự Nhiên",
-    description: "Màu nhẹ nhàng với thành phần dưỡng chất",
-    skinType: "Mọi loại",
-    image: "/lip-tint.jpg",
-    tag: "Hữu cơ",
-    originalPrice: 320000,
-    discountedPrice: 256000,
-    discount: 20,
+    slug: "cham-soc-co-the",
+    ten: "Chăm sóc cơ thể",
+    mo_ta: "Dưỡng thể, tẩy da chết và dầu dưỡng giúp da mềm mịn.",
+    anh: "/category-bodycare.jpg",
   },
 ]
 
-export const allProducts: Product[] = [
+const productsData: ProductDetailDTO[] = [
   {
-    id: 1,
-    name: "Sữa Rửa Mặt Dịu Nhẹ",
-    description: "Làm sạch dịu nhẹ, phù hợp da nhạy cảm",
-    image: "/cleansing-foam.jpg",
-    category: "Skincare",
-    tag: "Best Seller",
-    originalPrice: 450000,
-    discountedPrice: 360000,
-    discount: 20,
+    id: "P001",
+    slug: "serum-vitamin-c-15",
+    ten: "Serum Vitamin C 15%",
+    gia_ban: 420000,
+    gia_goc: 520000,
+    tinh_trang: "con_hang",
+    tags: ["Bán chạy", "Có sẵn"],
+    anh_chinh: "/vitamin-c-serum.jpg",
+    danh_muc_slug: "cham-soc-da",
+    thuong_hieu: "Dear, Klairs",
+    xuat_xu: "Hàn Quốc",
+    dung_tich: "35ml",
+    loai_da: ["Da xỉn màu", "Da hỗn hợp", "Da thường"],
+    mo_ta_ngan: "Serum giúp da sáng đều màu, kết cấu thấm nhanh, phù hợp da xỉn màu.",
+    cong_dung: [
+      "Hỗ trợ làm sáng và đều màu da.",
+      "Giảm cảm giác khô ráp sau rửa mặt.",
+      "Bổ sung chống oxy hóa cho da ban ngày.",
+    ],
+    cach_dung: [
+      "Dùng 2-3 giọt sau bước làm sạch và toner.",
+      "Dùng 1-2 lần/ngày trước kem dưỡng.",
+      "Ban ngày dùng thêm kem chống nắng.",
+    ],
+    luu_y: [
+      "Thử trước trên vùng da nhỏ.",
+      "Ngưng dùng nếu có dấu hiệu kích ứng.",
+      "Bảo quản nơi khô ráo, tránh ánh nắng trực tiếp.",
+    ],
   },
   {
-    id: 2,
-    name: "Serum Vitamin C Dưỡng Sáng",
-    description: "Giúp da sáng mịn và đều màu tự nhiên",
-    image: "/vitamin-c-serum.jpg",
-    category: "Skincare",
-    tag: "Best Seller",
-    originalPrice: 850000,
-    discountedPrice: 680000,
-    discount: 20,
+    id: "P002",
+    slug: "kem-duong-am-ceramide",
+    ten: "Kem Dưỡng Ẩm Ceramide",
+    gia_ban: 380000,
+    gia_goc: 450000,
+    tinh_trang: "con_hang",
+    tags: ["Mới", "Có sẵn"],
+    anh_chinh: "/rose-face-cream.jpg",
+    danh_muc_slug: "cham-soc-da",
+    thuong_hieu: "Illiyoon",
+    xuat_xu: "Hàn Quốc",
+    dung_tich: "75ml",
+    loai_da: ["Da khô", "Da nhạy cảm"],
+    mo_ta_ngan: "Kem dưỡng phục hồi hàng rào ẩm, chất kem mịn, không bết dính.",
+    cong_dung: [
+      "Hỗ trợ giảm khô căng sau khi rửa mặt.",
+      "Giữ ẩm tốt trong môi trường máy lạnh.",
+      "Tăng độ mềm mượt bề mặt da.",
+    ],
+    cach_dung: [
+      "Lấy lượng vừa đủ sau serum.",
+      "Vỗ nhẹ để kem thấm đều.",
+      "Dùng sáng và tối.",
+    ],
+    luu_y: [
+      "Tránh để sản phẩm dính vào mắt.",
+      "Đậy nắp kín sau khi dùng.",
+    ],
   },
   {
-    id: 3,
-    name: "Kem Dưỡng Ẩm Hoa Hồng",
-    description: "Cấp ẩm sâu, da căng mướt rạng rỡ",
-    image: "/rose-face-cream.jpg",
-    category: "Skincare",
-    tag: "New",
-    originalPrice: 1200000,
-    discountedPrice: 960000,
-    discount: 20,
+    id: "P003",
+    slug: "sua-rua-mat-do-pH-thap",
+    ten: "Sữa Rửa Mặt pH Thấp",
+    gia_ban: 210000,
+    gia_goc: 260000,
+    tinh_trang: "sap_het",
+    tags: ["Phổ biến", "Có sẵn"],
+    anh_chinh: "/cleansing-foam.jpg",
+    danh_muc_slug: "cham-soc-da",
+    thuong_hieu: "COSRX",
+    xuat_xu: "Hàn Quốc",
+    dung_tich: "150ml",
+    loai_da: ["Da dầu", "Da hỗn hợp", "Da nhạy cảm"],
+    mo_ta_ngan: "Làm sạch dịu nhẹ, hỗ trợ cân bằng da với độ pH thân thiện.",
+    cong_dung: [
+      "Làm sạch bụi bẩn và dầu thừa cuối ngày.",
+      "Giảm cảm giác khô rít sau khi rửa.",
+      "Phù hợp dùng hằng ngày.",
+    ],
+    cach_dung: [
+      "Làm ướt mặt, lấy lượng nhỏ sản phẩm.",
+      "Massage nhẹ 30-40 giây rồi rửa sạch.",
+    ],
+    luu_y: [
+      "Không chà xát mạnh khi rửa mặt.",
+      "Kết hợp kem dưỡng để giữ ẩm tốt hơn.",
+    ],
   },
   {
-    id: 4,
-    name: "Son Dưỡng Màu Tự Nhiên",
-    description: "Màu nhẹ nhàng, dưỡng ẩm mềm môi",
-    image: "/lip-tint.jpg",
-    category: "Makeup",
-    tag: "Popular",
-    originalPrice: 320000,
-    discountedPrice: 256000,
-    discount: 20,
+    id: "P004",
+    slug: "son-tint-mau-tu-nhien",
+    ten: "Son Tint Màu Tự Nhiên",
+    gia_ban: 245000,
+    gia_goc: 290000,
+    tinh_trang: "con_hang",
+    tags: ["Bán chạy", "Có sẵn"],
+    anh_chinh: "/lip-tint.jpg",
+    danh_muc_slug: "trang-diem",
+    thuong_hieu: "Rom&nd",
+    xuat_xu: "Hàn Quốc",
+    dung_tich: "4g",
+    loai_da: ["Mọi loại da"],
+    mo_ta_ngan: "Son tint mỏng nhẹ, màu tươi tự nhiên, độ bám tốt trong ngày.",
+    cong_dung: [
+      "Tạo màu môi trong trẻo, dễ chồng lớp.",
+      "Bề mặt môi căng nhẹ, không dày môi.",
+    ],
+    cach_dung: [
+      "Thoa 1 lớp mỏng lòng môi để hiệu ứng tự nhiên.",
+      "Có thể thoa full môi để màu rõ hơn.",
+    ],
+    luu_y: [
+      "Dưỡng ẩm môi trước khi thoa để màu đều hơn.",
+    ],
   },
   {
-    id: 5,
-    name: "Tẩy Da Chết Body",
-    description: "Loại bỏ tế bào chết, da mịn màng hơn",
-    image: "/body-scrub.jpg",
-    category: "Body Care",
-    tag: "Popular",
-    originalPrice: 480000,
-    discountedPrice: 384000,
-    discount: 20,
+    id: "P005",
+    slug: "mascara-cong-mi-lau-troi",
+    ten: "Mascara Cong Mi Lâu Trôi",
+    gia_ban: 310000,
+    gia_goc: 360000,
+    tinh_trang: "dat_sourcing",
+    tags: ["Đặt sourcing"],
+    anh_chinh: "/mascara.jpg",
+    danh_muc_slug: "trang-diem",
+    thuong_hieu: "Kiss Me",
+    xuat_xu: "Hàn Quốc",
+    dung_tich: "6g",
+    loai_da: ["Mọi loại da"],
+    mo_ta_ngan: "Mascara chống lem, giữ độ cong mi và dễ làm sạch cuối ngày.",
+    cong_dung: [
+      "Giúp mi trông dày và cong tự nhiên.",
+      "Hạn chế lem khi hoạt động cả ngày.",
+    ],
+    cach_dung: [
+      "Kẹp mi trước khi chuốt.",
+      "Chuốt từ chân mi theo đường ziczac.",
+    ],
+    luu_y: [
+      "Dùng tẩy trang chuyên dụng cho mắt để làm sạch.",
+    ],
   },
   {
-    id: 6,
-    name: "Bơ Dưỡng Thể",
-    description: "Dưỡng ẩm sâu, da mềm mại cả ngày",
-    image: "/body-butter.jpg",
-    category: "Body Care",
-    tag: "Best Seller",
-    originalPrice: 550000,
-    discountedPrice: 440000,
-    discount: 20,
+    id: "P006",
+    slug: "tay-da-chet-body-duong-am",
+    ten: "Tẩy Da Chết Body Dưỡng Ẩm",
+    gia_ban: 330000,
+    gia_goc: 390000,
+    tinh_trang: "con_hang",
+    tags: ["Có sẵn"],
+    anh_chinh: "/body-scrub.jpg",
+    danh_muc_slug: "cham-soc-co-the",
+    thuong_hieu: "Ariul",
+    xuat_xu: "Hàn Quốc",
+    dung_tich: "200ml",
+    loai_da: ["Da thường", "Da khô"],
+    mo_ta_ngan: "Tẩy tế bào chết cơ thể với hạt mịn, hỗ trợ da mềm mượt hơn.",
+    cong_dung: [
+      "Làm mịn bề mặt da vùng khuỷu tay, đầu gối.",
+      "Giúp dưỡng thể thấm tốt hơn.",
+    ],
+    cach_dung: [
+      "Dùng 2-3 lần/tuần trên da ẩm.",
+      "Massage nhẹ rồi rửa sạch với nước.",
+    ],
+    luu_y: [
+      "Không dùng lên vùng da đang tổn thương.",
+    ],
   },
   {
-    id: 7,
-    name: "Kem Chống Nắng Khoáng",
-    description: "Bảo vệ da SPF 50 nhẹ dịu mỗi ngày",
-    image: "/sunscreen.jpg",
-    category: "Skincare",
-    tag: "New",
-    originalPrice: 680000,
-    discountedPrice: 544000,
-    discount: 20,
+    id: "P007",
+    slug: "duong-the-huong-thao-moc",
+    ten: "Dưỡng Thể Hương Thảo Mộc",
+    gia_ban: 295000,
+    gia_goc: 340000,
+    tinh_trang: "con_hang",
+    tags: ["Mới", "Có sẵn"],
+    anh_chinh: "/body-butter.jpg",
+    danh_muc_slug: "cham-soc-co-the",
+    thuong_hieu: "The Saem",
+    xuat_xu: "Hàn Quốc",
+    dung_tich: "250ml",
+    loai_da: ["Da khô", "Da thường"],
+    mo_ta_ngan: "Dưỡng thể kết cấu mịn, mùi dịu nhẹ, phù hợp dùng mỗi ngày.",
+    cong_dung: [
+      "Dưỡng ẩm và giảm cảm giác khô ráp da cơ thể.",
+      "Giữ da mềm mượt sau khi tắm.",
+    ],
+    cach_dung: [
+      "Thoa sau khi tắm khi da còn hơi ẩm.",
+      "Tập trung vào vùng da khô như khuỷu tay, đầu gối.",
+    ],
+    luu_y: [
+      "Ngưng dùng nếu có dấu hiệu không phù hợp.",
+    ],
   },
   {
-    id: 8,
-    name: "Mặt Nạ Than Hoạt Tính",
-    description: "Làm sạch sâu và thông thoáng lỗ chân lông",
-    image: "/face-mask.jpg",
-    category: "Skincare",
-    tag: "Popular",
-    originalPrice: 420000,
-    discountedPrice: 336000,
-    discount: 20,
-  },
-  {
-    id: 9,
-    name: "Mascara Hữu Cơ",
-    description: "Tạo độ dài và dày tự nhiên cho mi",
-    image: "/mascara.jpg",
-    category: "Makeup",
-    tag: "Vegan",
-    originalPrice: 380000,
-    discountedPrice: 304000,
-    discount: 20,
-  },
-  {
-    id: 10,
-    name: "Bảng Phấn Má Hồng",
-    description: "Màu sắc tự nhiên, dễ tán đều",
-    image: "/blush-palette.jpg",
-    category: "Makeup",
-    tag: "Best Seller",
-    originalPrice: 560000,
-    discountedPrice: 448000,
-    discount: 20,
-  },
-  {
-    id: 11,
-    name: "Dầu Dưỡng Thể Thư Giãn",
-    description: "Hương thơm dịu nhẹ, dưỡng ẩm mềm da",
-    image: "/body-oil.jpg",
-    category: "Body Care",
-    tag: "Organic",
-    originalPrice: 720000,
-    discountedPrice: 576000,
-    discount: 20,
-  },
-  {
-    id: 12,
-    name: "Kem Dưỡng Mắt",
-    description: "Giảm quầng thâm, làm mịn vùng mắt",
-    image: "/eye-cream.jpg",
-    category: "Skincare",
-    tag: "New",
-    originalPrice: 920000,
-    discountedPrice: 736000,
-    discount: 20,
-  },
-  {
-    id: 13,
-    name: "Vitamin C Brightening Serum",
-    description: "Illuminates and evens skin tone naturally",
-    image: "/vitamin-c-serum.jpg",
-    category: "Skincare",
-    tag: "Best Seller",
-    originalPrice: 850000,
-    discountedPrice: 680000,
-    discount: 20,
-  },
-  {
-    id: 14,
-    name: "Hydrating Rose Face Cream",
-    description: "Deep moisture with organic rose extract",
-    image: "/rose-face-cream.jpg",
-    category: "Skincare",
-    tag: "New",
-    originalPrice: 1200000,
-    discountedPrice: 960000,
-    discount: 20,
-  },
-  {
-    id: 15,
-    name: "Gentle Cleansing Foam",
-    description: "Purifies without stripping natural oils",
-    image: "/cleansing-foam.jpg",
-    category: "Skincare",
-    tag: "Popular",
-    originalPrice: 450000,
-    discountedPrice: 360000,
-    discount: 20,
-  },
-  {
-    id: 16,
-    name: "Natural Glow Lip Tint",
-    description: "Subtle color with nourishing ingredients",
-    image: "/lip-tint.jpg",
-    category: "Makeup",
-    tag: "Organic",
-    originalPrice: 320000,
-    discountedPrice: 256000,
-    discount: 20,
-  },
-  {
-    id: 17,
-    name: "Nourishing Body Butter",
-    description: "Rich hydration for soft, smooth skin",
-    image: "/body-butter.jpg",
-    category: "Body Care",
-    tag: "Best Seller",
-    originalPrice: 550000,
-    discountedPrice: 440000,
-    discount: 20,
-  },
-  {
-    id: 18,
-    name: "Mineral Sunscreen SPF 50",
-    description: "Lightweight protection with natural minerals",
-    image: "/sunscreen.jpg",
-    category: "Skincare",
-    tag: "New",
-    originalPrice: 680000,
-    discountedPrice: 544000,
-    discount: 20,
-  },
-  {
-    id: 19,
-    name: "Charcoal Face Mask",
-    description: "Deeply cleanses and detoxifies pores",
-    image: "/face-mask.jpg",
-    category: "Skincare",
-    tag: "Popular",
-    originalPrice: 420000,
-    discountedPrice: 336000,
-    discount: 20,
-  },
-  {
-    id: 20,
-    name: "Organic Mascara",
-    description: "Lengthens and volumizes naturally",
-    image: "/mascara.jpg",
-    category: "Makeup",
-    tag: "Vegan",
-    originalPrice: 380000,
-    discountedPrice: 304000,
-    discount: 20,
-  },
-  {
-    id: 21,
-    name: "Exfoliating Body Scrub",
-    description: "Gently buffs away dead skin cells",
-    image: "/body-scrub.jpg",
-    category: "Body Care",
-    tag: "Popular",
-    originalPrice: 480000,
-    discountedPrice: 384000,
-    discount: 20,
-  },
-  {
-    id: 22,
-    name: "Rejuvenating Eye Cream",
-    description: "Reduces dark circles and fine lines",
-    image: "/eye-cream.jpg",
-    category: "Skincare",
-    tag: "New",
-    originalPrice: 920000,
-    discountedPrice: 736000,
-    discount: 20,
-  },
-  {
-    id: 23,
-    name: "Natural Blush Palette",
-    description: "Soft, buildable color for a healthy glow",
-    image: "/blush-palette.jpg",
-    category: "Makeup",
-    tag: "Best Seller",
-    originalPrice: 560000,
-    discountedPrice: 448000,
-    discount: 20,
-  },
-  {
-    id: 24,
-    name: "Aromatherapy Body Oil",
-    description: "Luxurious oil with calming essential oils",
-    image: "/body-oil.jpg",
-    category: "Body Care",
-    tag: "Organic",
-    originalPrice: 720000,
-    discountedPrice: 576000,
-    discount: 20,
+    id: "P008",
+    slug: "kem-chong-nang-spf50",
+    ten: "Kem Chống Nắng SPF50+",
+    gia_ban: 360000,
+    gia_goc: 420000,
+    tinh_trang: "het_hang",
+    tags: ["Phổ biến"],
+    anh_chinh: "/sunscreen.jpg",
+    danh_muc_slug: "cham-soc-da",
+    thuong_hieu: "Beauty of Joseon",
+    xuat_xu: "Hàn Quốc",
+    dung_tich: "50ml",
+    loai_da: ["Da dầu", "Da hỗn hợp", "Da thường"],
+    mo_ta_ngan: "Chống nắng phổ rộng, chất kem nhẹ, phù hợp dùng hằng ngày.",
+    cong_dung: [
+      "Hỗ trợ bảo vệ da trước tia UV.",
+      "Lớp finish tự nhiên, không nặng mặt.",
+    ],
+    cach_dung: [
+      "Thoa trước khi ra nắng 15 phút.",
+      "Thoa lại sau mỗi 2-3 giờ khi hoạt động ngoài trời.",
+    ],
+    luu_y: [
+      "Dùng đủ lượng để đạt hiệu quả bảo vệ tốt.",
+    ],
   },
 ]
 
-export const productsData: Record<string, ProductDetail> = {
-  "1": {
-    id: 1,
-    name: "Vitamin C Brightening Serum",
-    description:
-      "This powerful serum is formulated with 15% pure Vitamin C to brighten and even your skin tone. The lightweight formula absorbs quickly, delivering potent antioxidants deep into your skin. Perfect for all skin types, it helps reduce dark spots and promotes a radiant, youthful glow.",
-    image: "/vitamin-c-serum.jpg",
-    category: "Skincare",
-    tag: "Best Seller",
-    originalPrice: 850000,
-    discountedPrice: 680000,
-    discount: 20,
-    features: [
-      "15% Pure Vitamin C for maximum effectiveness",
-      "Brightens and evens skin tone naturally",
-      "Reduces appearance of dark spots and hyperpigmentation",
-      "Lightweight, fast-absorbing formula",
-      "Suitable for all skin types including sensitive skin",
-    ],
-    specifications: {
-      "Key Ingredients": "Vitamin C, Hyaluronic Acid, Vitamin E",
-      Volume: "30ml",
-      "Skin Type": "All skin types",
-      "How to Use": "Apply 2-3 drops to clean face morning and evening",
-    },
-  },
-  "2": {
-    id: 2,
-    name: "Hydrating Rose Face Cream",
-    description:
-      "Indulge your skin with this luxurious face cream infused with organic rose extract. The rich, creamy formula provides deep hydration while soothing and nourishing dry skin. Wake up to plump, dewy, and radiant skin every morning.",
-    image: "/rose-face-cream.jpg",
-    category: "Skincare",
-    tag: "New",
-    originalPrice: 1200000,
-    discountedPrice: 960000,
-    discount: 20,
-    features: [
-      "Infused with organic Damascus rose extract",
-      "Provides 24-hour deep hydration",
-      "Nourishes and softens dry skin",
-      "Anti-aging properties reduce fine lines",
-      "Delicate natural rose scent",
-    ],
-    specifications: {
-      "Key Ingredients": "Rose Extract, Shea Butter, Jojoba Oil",
-      Volume: "50ml",
-      "Skin Type": "Dry and mature skin",
-      "How to Use": "Apply to clean face morning and night",
-    },
-  },
-  "3": {
-    id: 3,
-    name: "Gentle Cleansing Foam",
-    description:
-      "Start your skincare routine with this gentle cleansing foam that purifies your skin without stripping its natural oils. The soft, creamy lather removes makeup, dirt, and impurities while maintaining your skin's moisture balance.",
-    image: "/cleansing-foam.jpg",
-    category: "Skincare",
-    tag: "Popular",
-    originalPrice: 450000,
-    discountedPrice: 360000,
-    discount: 20,
-    features: [
-      "Gentle formula for sensitive skin",
-      "Removes makeup and impurities effectively",
-      "Maintains skin's natural moisture balance",
-      "Contains soothing chamomile extract",
-      "pH-balanced for healthy skin",
-    ],
-    specifications: {
-      "Key Ingredients": "Chamomile, Aloe Vera, Glycerin",
-      Volume: "150ml",
-      "Skin Type": "Sensitive and normal skin",
-      "How to Use": "Massage onto damp face, rinse thoroughly",
-    },
-  },
-  "4": {
-    id: 4,
-    name: "Natural Glow Lip Tint",
-    description:
-      "Achieve the perfect natural lip look with this nourishing lip tint. The lightweight formula provides a subtle wash of color while keeping your lips soft and hydrated throughout the day. Made with organic ingredients for guilt-free beauty.",
-    image: "/lip-tint.jpg",
-    category: "Makeup",
-    tag: "Organic",
-    originalPrice: 320000,
-    discountedPrice: 256000,
-    discount: 20,
-    features: [
-      "Subtle, buildable color for natural look",
-      "Infused with nourishing plant oils",
-      "Long-lasting hydration",
-      "100% organic and vegan ingredients",
-      "Available in 4 flattering shades",
-    ],
-    specifications: {
-      "Key Ingredients": "Jojoba Oil, Vitamin E, Natural Pigments",
-      Volume: "4g",
-      "Skin Type": "All types",
-      "How to Use": "Apply directly to lips, build for more intensity",
-    },
-  },
+export const featuredProducts: ProductCardDTO[] = productsData.slice(0, 6).map(toProductCard)
+
+export const allProducts: ProductCardDTO[] = productsData.map(toProductCard)
+
+export function getCategoryBySlug(slug: string) {
+  return categories.find((item) => item.slug === slug)
 }
 
-export const getProductById = (id: string | number) => productsData[String(id)]
+export function getProductBySlug(slug: string) {
+  return productsData.find((item) => item.slug === slug)
+}
+
+export function getProductsByCategory(slug: string) {
+  return allProducts.filter((item) => item.danh_muc_slug === slug)
+}
+
+export function getProductDetailsByCategory(slug: string) {
+  return productsData.filter((item) => item.danh_muc_slug === slug)
+}
+
+export function formatVnd(price: number) {
+  return `${price.toLocaleString("vi-VN")}đ`
+}
+
+export function statusLabel(status: TinhTrangSanPham) {
+  switch (status) {
+    case "con_hang":
+      return "Còn hàng"
+    case "sap_het":
+      return "Sắp hết"
+    case "het_hang":
+      return "Hết hàng"
+    case "dat_sourcing":
+      return "Đặt sourcing"
+    default:
+      return "Đang cập nhật"
+  }
+}
+
+function toProductCard(product: ProductDetailDTO): ProductCardDTO {
+  return {
+    id: product.id,
+    slug: product.slug,
+    ten: product.ten,
+    gia_ban: product.gia_ban,
+    gia_goc: product.gia_goc,
+    tinh_trang: product.tinh_trang,
+    tags: product.tags,
+    anh_chinh: product.anh_chinh,
+    danh_muc_slug: product.danh_muc_slug,
+    thuong_hieu: product.thuong_hieu,
+    loai_da: product.loai_da,
+    cong_dung_tom_tat: product.cong_dung,
+  }
+}
