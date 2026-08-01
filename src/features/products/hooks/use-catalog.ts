@@ -70,6 +70,11 @@ export function useCatalog(products: ProductCardDTO[], initialQuery: string) {
     setFilter: (field: keyof CatalogFilterValues, value: string) =>
       resetPage(() => setFilters((current) => ({ ...current, [field]: value }))),
     resetFilters: () => resetPage(() => setFilters(initialFilters)),
+    resetAll: () =>
+      resetPage(() => {
+        setQuery("")
+        setFilters(initialFilters)
+      }),
     showMore: () => setPage((current) => current + 1),
   }
 }

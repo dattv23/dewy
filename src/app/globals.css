@@ -4,25 +4,25 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: #f8fbf9;
-  --foreground: #0f172a;
+  --background: #fafafa;
+  --foreground: #18181b;
   --card: #ffffff;
-  --card-foreground: #0f172a;
+  --card-foreground: #18181b;
   --popover: #ffffff;
-  --popover-foreground: #0f172a;
-  --primary: #1f8a4d;
+  --popover-foreground: #18181b;
+  --primary: #18181b;
   --primary-foreground: #ffffff;
-  --secondary: #e8f6ee;
-  --secondary-foreground: #0f172a;
-  --muted: #eef4f1;
-  --muted-foreground: #475569;
-  --accent: #eff8f3;
-  --accent-foreground: #0f172a;
-  --destructive: #dc2626;
+  --secondary: #f1f1f2;
+  --secondary-foreground: #27272a;
+  --muted: #f4f4f5;
+  --muted-foreground: #66666e;
+  --accent: #f6dee7;
+  --accent-foreground: #71364d;
+  --destructive: #b4232d;
   --destructive-foreground: #ffffff;
-  --border: #dde6e1;
-  --input: #dde6e1;
-  --ring: #1f8a4d;
+  --border: #e4e4e7;
+  --input: #e4e4e7;
+  --ring: #9f4868;
   --radius: 12px;
 }
 
@@ -60,10 +60,21 @@
     @apply border-border outline-none;
   }
 
+  html,
+  body {
+    min-height: 100%;
+  }
+
   body {
     @apply bg-background text-foreground;
+    min-height: 100svh;
     font-size: 15px;
     line-height: 1.6;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    @apply bg-accent text-accent-foreground;
   }
 
   a,
@@ -72,5 +83,16 @@
   select,
   textarea {
     @apply focus-visible:outline-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
   }
 }

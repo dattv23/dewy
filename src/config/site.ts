@@ -1,5 +1,5 @@
 export const SITE_CONFIG = {
-  name: "Dewy Korea",
+  name: "Dewy",
   locale: "vi",
   title: "Mỹ phẩm Hàn Quốc chính hãng | Mua nhanh & Tìm theo yêu cầu",
   description:
