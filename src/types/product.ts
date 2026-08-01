@@ -44,4 +44,3 @@ export type CategoryDTO = {
   badge?: string
   subcategories: SubCategoryDTO[]
 }
-

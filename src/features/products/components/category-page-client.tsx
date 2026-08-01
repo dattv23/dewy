@@ -3,7 +3,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { useMemo } from "react"
-import { ArrowRight, Search, SlidersHorizontal, Sparkles, X } from "lucide-react"
+import { ArrowRight, ChevronDown, Search, SlidersHorizontal, Sparkles, X } from "lucide-react"
 import { Header } from "@/components/website/header"
 import { Footer } from "@/components/website/footer"
 import { ProductCard } from "@/features/products/components/product-card"
@@ -46,38 +46,38 @@ export function CategoryPageClient({ slug, initialQuery }: CategoryPageClientPro
       <Header />
       <main className="flex-1">
         <section className="border-b border-zinc-200/70 bg-[#f7f4f2]">
-          <div className="mx-auto w-full max-w-6xl px-4 py-5 sm:py-7">
-            <div className="relative min-h-70 overflow-hidden rounded-3xl bg-zinc-950 sm:min-h-85">
-              <Image
-                src={category.image}
-                alt={`Bộ sưu tập ${category.name}`}
-                fill
-                priority
-                sizes="(max-width: 768px) 100vw, 1152px"
-                className="object-cover opacity-70"
-              />
-              <div className="absolute inset-0 bg-linear-to-r from-black/80 via-black/45 to-black/5" />
-              <div className="relative z-10 flex min-h-70 max-w-xl flex-col justify-end p-6 text-white sm:min-h-85 sm:p-10">
-                <p className="mb-auto flex items-center gap-2 text-xs font-semibold tracking-[0.18em] text-white/75 uppercase">
-                  <Sparkles className="h-3.5 w-3.5" /> Tuyển chọn bởi Dewy
-                </p>
-                <p className="mb-3 text-sm text-white/70">
-                  <Link href="/" className="transition-colors hover:text-white">
-                    Trang chủ
-                  </Link>
-                  <span className="mx-2">/</span>
-                  {category.name}
-                </p>
-                <h1 className="text-3xl leading-tight font-semibold tracking-[-0.035em] sm:text-5xl">
-                  {category.name}
-                </h1>
-                <p className="mt-3 max-w-md text-sm leading-6 text-white/80 sm:text-base">
-                  {category.description}
-                </p>
-              </div>
+          <div className="relative min-h-80 overflow-hidden bg-zinc-950 sm:min-h-105">
+            <Image
+              src={category.image}
+              alt={`Bộ sưu tập ${category.name}`}
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover opacity-75"
+            />
+            <div className="absolute inset-0 bg-linear-to-r from-black/85 via-black/45 to-black/10" />
+            <div className="relative z-10 mx-auto flex min-h-80 w-full max-w-6xl flex-col justify-end px-4 py-8 text-white sm:min-h-105 sm:py-12">
+              <p className="mb-auto flex items-center gap-2 text-[11px] font-semibold tracking-[0.22em] text-white/75 uppercase sm:text-xs">
+                <Sparkles className="h-3.5 w-3.5" /> Tuyển chọn bởi Dewy
+              </p>
+              <p className="mb-3 text-xs text-white/70 sm:text-sm">
+                <Link href="/" className="transition-colors hover:text-white">
+                  Trang chủ
+                </Link>
+                <span className="mx-2">/</span>
+                {category.name}
+              </p>
+              <h1 className="max-w-2xl font-serif text-4xl leading-tight font-medium tracking-tight sm:text-6xl">
+                {category.name}
+              </h1>
+              <p className="mt-4 max-w-lg text-sm leading-6 text-white/80 sm:text-base sm:leading-7">
+                {category.description}
+              </p>
             </div>
+          </div>
 
-            <nav aria-label="Danh mục sản phẩm" className="mt-5 flex gap-2 overflow-x-auto pb-1">
+          <div className="mx-auto w-full max-w-6xl px-4 py-4 sm:py-5">
+            <nav aria-label="Danh mục sản phẩm" className="flex gap-2 overflow-x-auto pb-1">
               {categories.map((item) => (
                 <Link
                   key={item.slug}
@@ -111,41 +111,63 @@ export function CategoryPageClient({ slug, initialQuery }: CategoryPageClientPro
             </p>
           </div>
 
-          <div className="sticky top-16 z-20 -mx-2 mb-7 rounded-2xl border border-zinc-200/80 bg-white/90 p-2 shadow-[0_8px_30px_rgba(0,0,0,0.05)] backdrop-blur-xl sm:mx-0">
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-              <label className="relative min-w-0 flex-1">
+          <div className="mb-8 overflow-hidden rounded-xl border border-zinc-200/70 bg-white shadow-[0_6px_24px_rgba(24,24,27,0.035)]">
+            <div className="flex flex-col gap-2 p-2 sm:flex-row sm:items-center sm:p-1.5">
+              <label className="group relative min-w-0 flex-1">
                 <span className="sr-only">Tìm kiếm sản phẩm</span>
-                <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
+                <Search
+                  className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-zinc-400 transition-colors group-focus-within:text-zinc-700"
+                  strokeWidth={1.5}
+                />
                 <Input
                   value={catalog.query}
                   onChange={(event) => catalog.setQuery(event.target.value)}
                   placeholder="Tìm theo tên sản phẩm, công dụng, thương hiệu..."
-                  className="h-11 w-full rounded-xl border-0 bg-zinc-100/80 pl-10 text-[15px] shadow-none focus-visible:bg-white"
+                  className="h-11 w-full rounded-lg border border-transparent bg-[#faf9f8] pr-10 pl-10 text-sm shadow-none transition-all placeholder:text-zinc-400 hover:bg-zinc-100/80 focus-visible:border-zinc-300 focus-visible:bg-white focus-visible:ring-1 focus-visible:ring-zinc-200"
                   aria-label="Tìm kiếm sản phẩm theo tên, công dụng hoặc thương hiệu"
                 />
+                {catalog.query && (
+                  <button
+                    type="button"
+                    onClick={() => catalog.setQuery("")}
+                    className="absolute top-1/2 right-1.5 flex size-8 -translate-y-1/2 items-center justify-center rounded-full text-zinc-400 transition-colors hover:bg-white hover:text-zinc-900"
+                    aria-label="Xóa nội dung tìm kiếm"
+                  >
+                    <X className="size-4" />
+                  </button>
+                )}
               </label>
-              <div className="grid grid-cols-2 gap-2 sm:flex">
-                <select
-                  className="h-11 min-w-0 rounded-xl border border-zinc-200 bg-white px-3 text-sm font-medium sm:w-48"
-                  value={catalog.sort}
-                  onChange={(event) => catalog.setSort(event.target.value as CatalogSort)}
-                  aria-label="Sắp xếp sản phẩm"
-                >
-                  {CATALOG_CONFIG.sortOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
+              <div className="grid grid-cols-2 gap-2 sm:flex sm:shrink-0">
+                <label className="relative min-w-0">
+                  <span className="sr-only">Sắp xếp sản phẩm</span>
+                  <select
+                    className="h-11 w-full appearance-none rounded-lg border border-zinc-200/80 bg-white pr-9 pl-3.5 text-sm font-normal text-zinc-700 transition-colors outline-none hover:border-zinc-300 focus:border-zinc-400 focus:ring-1 focus:ring-zinc-200 sm:w-44"
+                    value={catalog.sort}
+                    onChange={(event) => catalog.setSort(event.target.value as CatalogSort)}
+                    aria-label="Sắp xếp sản phẩm"
+                  >
+                    {CATALOG_CONFIG.sortOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="pointer-events-none absolute top-1/2 right-3 size-3.5 -translate-y-1/2 text-zinc-400" />
+                </label>
                 <Sheet>
                   <SheetTrigger asChild>
                     <Button
                       variant="outline"
-                      className="h-11 rounded-xl border-zinc-200 bg-white px-4"
+                      className="h-11 rounded-lg border-zinc-200/80 bg-white px-4 font-normal text-zinc-700 shadow-none hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-950"
                       aria-label="Mở bộ lọc"
                     >
-                      <SlidersHorizontal className="h-4 w-4" />
-                      Bộ lọc{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
+                      <SlidersHorizontal className="size-4" />
+                      Bộ lọc
+                      {activeFilterCount > 0 && (
+                        <span className="flex size-4.5 items-center justify-center rounded-full bg-zinc-900 text-[9px] font-semibold text-white">
+                          {activeFilterCount}
+                        </span>
+                      )}
                     </Button>
                   </SheetTrigger>
                   <SheetContent
@@ -163,7 +185,7 @@ export function CategoryPageClient({ slug, initialQuery }: CategoryPageClientPro
               </div>
             </div>
             {(catalog.query || activeFilterCount > 0) && (
-              <div className="mt-2 flex items-center justify-between gap-3 border-t border-zinc-100 px-2 pt-2">
+              <div className="flex items-center justify-between gap-3 border-t border-zinc-100 bg-[#fcfbfa] px-4 py-3">
                 <p className="truncate text-xs text-zinc-500">
                   Đang hiển thị {catalog.filteredProducts.length} kết quả
                   {catalog.query ? ` cho “${catalog.query}”` : ""}
