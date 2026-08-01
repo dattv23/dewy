@@ -7,6 +7,8 @@ export const ROUTES = {
   faq: "/faq",
   cart: "/gio-hang",
   checkout: "/thanh-toan",
+  register: "/dang-ky",
+  login: "/dang-nhap",
   admin: "/admin",
 } as const
 

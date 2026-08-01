@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useEffect, useState } from "react"
-import { Menu, Search, ShoppingBag, X } from "lucide-react"
+import { Menu, Search, ShoppingBag, UserRound, X } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { cartCount, getCartEventName, getCartItems } from "@/features/cart/cart-store"
@@ -86,6 +86,16 @@ export function Header() {
           <Button
             asChild
             variant="ghost"
+            className="hover:bg-accent/60 hidden h-10 w-10 shrink-0 rounded-full p-0 md:inline-flex"
+          >
+            <Link href={ROUTES.register} aria-label="Đăng ký tài khoản">
+              <UserRound className="h-5 w-5" />
+            </Link>
+          </Button>
+
+          <Button
+            asChild
+            variant="ghost"
             className="hover:bg-accent/60 relative ml-auto h-10 w-10 shrink-0 rounded-full p-0 md:ml-0"
           >
             <Link href="/gio-hang" aria-label="Giỏ hàng">
@@ -124,6 +134,13 @@ export function Header() {
                   {item.label}
                 </Link>
               ))}
+              <Link
+                href={ROUTES.register}
+                className="text-foreground hover:bg-secondary rounded-lg px-2 py-2 text-[15px] font-medium"
+                onClick={() => setMobileOpen(false)}
+              >
+                Đăng ký tài khoản
+              </Link>
             </div>
           </div>
         )}
