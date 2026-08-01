@@ -1,6 +1,0 @@
-﻿import { redirect } from "next/navigation"
-
-export default function LegacyProductsPage() {
-  redirect("/danh-muc/cham-soc-da")
-}
-
