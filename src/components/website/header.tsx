@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { ChevronRight, Gift, Menu, Search, ShoppingBag, Sparkles, UserRound } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -20,7 +20,8 @@ import { SITE_CONFIG } from "@/config/site"
 import { cartCount, getCartEventName, getCartItems } from "@/features/cart/cart-store"
 import { categories } from "@/features/products/data/products"
 
-const SCROLL_THRESHOLD = 48
+const HEADER_COLLAPSE_THRESHOLD = 144
+const HEADER_EXPAND_THRESHOLD = 24
 
 const serviceLinks = [
   { href: ROUTES.sourcingRequest, label: "Đặt hàng theo yêu cầu", highlighted: true },
@@ -56,13 +57,36 @@ function useCartCount() {
 
 function useHeaderScrolled() {
   const [scrolled, setScrolled] = useState(false)
+  const scrolledRef = useRef(false)
 
   useEffect(() => {
-    const updateScrolledState = () => setScrolled(window.scrollY > SCROLL_THRESHOLD)
-    updateScrolledState()
+    let animationFrame: number | null = null
 
-    window.addEventListener("scroll", updateScrolledState, { passive: true })
-    return () => window.removeEventListener("scroll", updateScrolledState)
+    const updateScrolledState = () => {
+      animationFrame = null
+
+      const shouldBeScrolled = scrolledRef.current
+        ? window.scrollY > HEADER_EXPAND_THRESHOLD
+        : window.scrollY > HEADER_COLLAPSE_THRESHOLD
+
+      if (shouldBeScrolled === scrolledRef.current) return
+
+      scrolledRef.current = shouldBeScrolled
+      setScrolled(shouldBeScrolled)
+    }
+
+    const handleScroll = () => {
+      if (animationFrame !== null) return
+      animationFrame = window.requestAnimationFrame(updateScrolledState)
+    }
+
+    updateScrolledState()
+    window.addEventListener("scroll", handleScroll, { passive: true })
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+      if (animationFrame !== null) window.cancelAnimationFrame(animationFrame)
+    }
   }, [])
 
   return scrolled
@@ -339,13 +363,6 @@ function DesktopNavigation({ pathname, hidden }: { pathname: string; hidden: boo
 function DesktopCategoryNavigation({ pathname }: { pathname: string }) {
   return (
     <nav className="flex h-full items-center gap-8" aria-label="Danh mục sản phẩm">
-      <Link
-        href={ROUTES.categories}
-        className="flex h-full items-center gap-2 text-xs font-semibold tracking-[0.08em] uppercase transition-colors hover:text-rose-800"
-      >
-        <Menu className="size-4" strokeWidth={1.6} />
-        Tất cả sản phẩm
-      </Link>
       {categories.map((category) => {
         const href = getCategoryHref(category.slug)
         const active = isPathActive(pathname, href)
