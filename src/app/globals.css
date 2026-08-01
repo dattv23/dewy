@@ -96,3 +96,13 @@
     animation-iteration-count: 1 !important;
   }
 }
+
+.category-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.category-scrollbar::-webkit-scrollbar {
+  display: none;
+}
