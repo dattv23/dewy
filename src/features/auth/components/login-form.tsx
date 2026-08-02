@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ArrowRight, Eye, EyeOff, LoaderCircle } from "lucide-react"
 import { useForm } from "react-hook-form"
@@ -19,9 +19,13 @@ import {
 import { Input } from "@/components/ui/input"
 import { ROUTES } from "@/constants/routes"
 import { GoogleIcon } from "@/features/auth/components/google-icon"
-import { AUTH_ENDPOINTS, AUTH_ERROR_MESSAGES } from "@/features/auth/constants/auth.constants"
+import {
+  AUTH_ENDPOINTS,
+  AUTH_ERROR_CODES,
+  AUTH_ERROR_MESSAGES,
+} from "@/features/auth/constants/auth.constants"
 import { loginSchema, type LoginInput } from "@/features/auth/schemas/login.schema"
-import { login } from "@/features/auth/services/auth.service"
+import { AuthRequestError, login } from "@/features/auth/services/auth.service"
 
 const defaultValues: LoginInput = {
   email: "",
@@ -31,17 +35,23 @@ const defaultValues: LoginInput = {
 
 export function LoginForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [showPassword, setShowPassword] = useState(false)
   const form = useForm<LoginInput>({ resolver: zodResolver(loginSchema), defaultValues })
 
   async function onSubmit(values: LoginInput) {
     form.clearErrors("root")
     try {
-      await login(values)
-      router.replace(ROUTES.home)
+      const result = await login(values, searchParams.get("next"))
+      router.replace(result.redirectTo)
       router.refresh()
-    } catch {
-      form.setError("root", { message: AUTH_ERROR_MESSAGES.login })
+    } catch (error) {
+      const message =
+        error instanceof AuthRequestError && error.message === AUTH_ERROR_CODES.invalidCredentials
+          ? AUTH_ERROR_MESSAGES.login
+          : AUTH_ERROR_MESSAGES.unavailable
+
+      form.setError("root", { message })
     }
   }
 
@@ -76,6 +86,14 @@ export function LoginForm() {
 
       <Form {...form}>
         <form className="space-y-4" noValidate onSubmit={form.handleSubmit(onSubmit)}>
+          {searchParams.get("registered") === "1" && (
+            <div
+              role="status"
+              className="rounded-xl border border-emerald-200 bg-emerald-50 px-3.5 py-3 text-xs leading-5 text-emerald-800"
+            >
+              {AUTH_ERROR_MESSAGES.registrationSuccess}
+            </div>
+          )}
           <FormField
             control={form.control}
             name="email"

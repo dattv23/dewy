@@ -1,14 +1,16 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { Menu, Search } from "lucide-react"
+import { usePathname, useRouter } from "next/navigation"
+import { House, LogOut, Menu, Search } from "lucide-react"
 import { ADMIN_NAVIGATION } from "@/config/admin-navigation"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { ROUTES } from "@/constants/routes"
+import { logout } from "@/features/auth/services/auth.service"
 
 function Navigation({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname()
@@ -45,7 +47,21 @@ function Navigation({ onNavigate }: { onNavigate?: () => void }) {
   )
 }
 
-export function AdminShell({ children }: { children: React.ReactNode }) {
+export function AdminShell({
+  children,
+  userName,
+}: {
+  children: React.ReactNode
+  userName: string
+}) {
+  const router = useRouter()
+
+  async function handleLogout() {
+    await logout()
+    router.replace(ROUTES.login)
+    router.refresh()
+  }
+
   return (
     <div className="min-h-screen bg-[#f8fbf9]">
       <header className="sticky top-0 z-30 border-b bg-white/95 backdrop-blur">
@@ -77,9 +93,21 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             <Input className="h-9 pl-9" placeholder="Tìm nhanh SKU, mã đơn, SĐT..." />
           </div>
 
-          <Badge variant="secondary" className="hidden h-8 px-2 text-xs sm:inline-flex">
-            Trực ca: Suong Nguyen
+          <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
+            <Link href={ROUTES.home}>
+              <House className="size-4" />
+              Xem website
+            </Link>
+          </Button>
+
+          <Badge variant="secondary" className="hidden h-8 max-w-48 px-2 text-xs sm:inline-flex">
+            <span className="truncate">{userName}</span>
           </Badge>
+
+          <Button type="button" variant="ghost" size="icon" onClick={() => void handleLogout()}>
+            <LogOut className="size-4" />
+            <span className="sr-only">Đăng xuất</span>
+          </Button>
         </div>
       </header>
 

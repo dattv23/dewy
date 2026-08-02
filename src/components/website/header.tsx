@@ -3,7 +3,16 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
-import { ChevronRight, Gift, Menu, Search, ShoppingBag, Sparkles, UserRound } from "lucide-react"
+import {
+  ChevronRight,
+  Gift,
+  LogOut,
+  Menu,
+  Search,
+  ShoppingBag,
+  Sparkles,
+  UserRound,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -18,7 +27,9 @@ import {
 import { ROUTES } from "@/constants/routes"
 import { SITE_CONFIG } from "@/config/site"
 import { cartCount, getCartEventName, getCartItems } from "@/features/cart/cart-store"
+import { useSession } from "@/features/auth/hooks/use-session"
 import { categories } from "@/features/products/data/products"
+import type { AuthSession } from "@/types/auth"
 
 const HEADER_COLLAPSE_THRESHOLD = 144
 const HEADER_EXPAND_THRESHOLD = 24
@@ -161,7 +172,18 @@ function Brand({ compact }: { compact: boolean }) {
   )
 }
 
-function AccountActions({ cartItemsCount }: { cartItemsCount: number }) {
+type AuthActionsProps = {
+  user: AuthSession | null
+  isSessionLoading: boolean
+  onLogout: () => Promise<void>
+}
+
+function AccountActions({
+  cartItemsCount,
+  user,
+  isSessionLoading,
+  onLogout,
+}: AuthActionsProps & { cartItemsCount: number }) {
   return (
     <div className="flex items-center justify-end gap-0.5 lg:gap-1">
       <Button
@@ -171,9 +193,24 @@ function AccountActions({ cartItemsCount }: { cartItemsCount: number }) {
       >
         <Link href={ROUTES.login} aria-label="Đăng nhập hoặc đăng ký tài khoản">
           <UserRound className="size-5" strokeWidth={1.6} />
-          <span className="hidden text-xs lg:inline">Tài khoản</span>
+          <span className="hidden max-w-28 truncate text-xs lg:inline">
+            {user?.fullName ?? (isSessionLoading ? "Đang tải..." : "Tài khoản")}
+          </span>
         </Link>
       </Button>
+
+      {user && (
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          onClick={() => void onLogout()}
+          className="hidden rounded-full sm:inline-flex"
+          aria-label="Đăng xuất"
+        >
+          <LogOut className="size-4" />
+        </Button>
+      )}
 
       <Button
         asChild
@@ -198,7 +235,12 @@ function CartBadge({ count }: { count: number }) {
   )
 }
 
-function MobileMenu({ pathname }: { pathname: string }) {
+function MobileMenu({
+  pathname,
+  user,
+  isSessionLoading,
+  onLogout,
+}: { pathname: string } & AuthActionsProps) {
   const [open, setOpen] = useState(false)
 
   return (
@@ -219,7 +261,7 @@ function MobileMenu({ pathname }: { pathname: string }) {
             <SearchBox compact onSubmit={() => setOpen(false)} />
           </div>
           <MobileMenuNavigation pathname={pathname} />
-          <MobileAuthActions />
+          <MobileAuthActions user={user} isSessionLoading={isSessionLoading} onLogout={onLogout} />
         </SheetContent>
       </Sheet>
     </div>
@@ -297,7 +339,20 @@ function MobileMenuSectionLabel({
   )
 }
 
-function MobileAuthActions() {
+function MobileAuthActions({ user, isSessionLoading, onLogout }: AuthActionsProps) {
+  if (user) {
+    return (
+      <div className="border-t border-zinc-200 bg-white px-6 py-5">
+        <p className="truncate text-sm font-semibold text-zinc-950">{user.fullName}</p>
+        <p className="mb-3 truncate text-xs text-zinc-500">{user.email}</p>
+        <Button type="button" variant="outline" className="w-full" onClick={() => void onLogout()}>
+          <LogOut className="size-4" />
+          Đăng xuất
+        </Button>
+      </div>
+    )
+  }
+
   return (
     <div className="border-t border-zinc-200 bg-white px-6 py-5">
       <div className="grid grid-cols-2 gap-3">
@@ -306,7 +361,7 @@ function MobileAuthActions() {
             href={ROUTES.login}
             className="inline-flex h-11 items-center justify-center border border-zinc-300 text-sm font-semibold transition-colors hover:bg-zinc-100"
           >
-            Đăng nhập
+            {isSessionLoading ? "Đang tải..." : "Đăng nhập"}
           </Link>
         </SheetClose>
         <SheetClose asChild>
@@ -326,21 +381,38 @@ type HeaderMainRowProps = {
   cartItemsCount: number
   pathname: string
   compact: boolean
-}
+} & AuthActionsProps
 
-function HeaderMainRow({ cartItemsCount, pathname, compact }: HeaderMainRowProps) {
+function HeaderMainRow({
+  cartItemsCount,
+  pathname,
+  compact,
+  user,
+  isSessionLoading,
+  onLogout,
+}: HeaderMainRowProps) {
   return (
     <div
       className={`mx-auto grid w-full max-w-360 grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 transition-[height] duration-300 sm:px-6 lg:px-10 ${
         compact ? "h-16 lg:h-18" : "h-17 lg:h-24"
       }`}
     >
-      <MobileMenu pathname={pathname} />
+      <MobileMenu
+        pathname={pathname}
+        user={user}
+        isSessionLoading={isSessionLoading}
+        onLogout={onLogout}
+      />
       <div className="hidden max-w-100 lg:block">
         <SearchBox />
       </div>
       <Brand compact={compact} />
-      <AccountActions cartItemsCount={cartItemsCount} />
+      <AccountActions
+        cartItemsCount={cartItemsCount}
+        user={user}
+        isSessionLoading={isSessionLoading}
+        onLogout={onLogout}
+      />
     </div>
   )
 }
@@ -446,6 +518,7 @@ export function Header() {
   const pathname = usePathname()
   const cartItemsCount = useCartCount()
   const scrolled = useHeaderScrolled()
+  const { user, isLoading: isSessionLoading, logout } = useSession()
 
   return (
     <>
@@ -455,7 +528,14 @@ export function Header() {
           scrolled ? "border-zinc-200 shadow-[0_8px_30px_rgba(0,0,0,0.06)]" : "border-zinc-100"
         }`}
       >
-        <HeaderMainRow cartItemsCount={cartItemsCount} pathname={pathname} compact={scrolled} />
+        <HeaderMainRow
+          cartItemsCount={cartItemsCount}
+          pathname={pathname}
+          compact={scrolled}
+          user={user}
+          isSessionLoading={isSessionLoading}
+          onLogout={logout}
+        />
         <DesktopNavigation pathname={pathname} hidden={scrolled} />
         <MobileCategoryNavigation pathname={pathname} />
       </header>
