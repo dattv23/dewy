@@ -9,6 +9,7 @@ export const ROUTES = {
   checkout: "/thanh-toan",
   register: "/dang-ky",
   login: "/dang-nhap",
+  account: "/tai-khoan",
   admin: "/admin",
 } as const
 

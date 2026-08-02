@@ -60,6 +60,8 @@ dewy-fe/
 │   │   ├── website/              # Storefront shell components
 │   │   └── admin/                # Admin shell components
 │   ├── features/                 # Independent business modules
+│   │   ├── account/
+│   │   │   └── components/       # Account overview, navigation, orders, and security UI
 │   │   └── auth/
 │   │       ├── components/       # Auth-specific UI
 │   │       ├── constants/        # Auth endpoints, messages, and constants
@@ -222,6 +224,10 @@ Do not place all state in a global store. Avoid copying server data into local s
 - `components/ui` contains reusable primitives with no business knowledge.
 - Components using business language belong to a feature.
 - Headers, footers, and application shells belong to `components/website` or `components/admin`.
+- Keep page-level feature components focused on composition. Split independent screen regions into
+  named files when they own separate state, user flows, or loading and empty states.
+- Keep state beside the component that uses it. For example, order lookup form state belongs in an
+  `order-lookup.tsx` component instead of the parent account page shell.
 - Follow the tokens, spacing, typography, and accessibility guidance in `DESIGN.md`.
 - Every input needs a label, every icon-only button needs an accessible name, and actionable errors should use `role="alert"` where appropriate.
 - Test mobile-first layouts, keyboard navigation, and visible focus states.
@@ -251,6 +257,23 @@ Example workflow for a `wishlist` feature:
 10. Run linting, formatting checks, and a production build.
 
 Do not introduce abstractions before there is a real reuse requirement. Similar-looking code may still represent different business rules.
+
+For a multi-section feature such as the customer account area, organize components by responsibility:
+
+```text
+features/account/components/
+├── profile-page-client.tsx       # Page shell and section composition
+├── account-navigation.tsx        # Account section navigation
+├── account-overview.tsx          # Session and profile summary
+├── order-lookup.tsx              # Order lookup form and local state
+├── tracking-result.tsx           # Lookup result presentation
+├── account-addresses.tsx         # Saved-address state
+└── account-security.tsx          # Session security and logout action
+```
+
+Small supporting components may remain separate when they establish a consistent feature-level UI
+pattern. Avoid both extremes: one file containing the whole screen and a large number of trivial
+one-line wrappers.
 
 ## Testing
 

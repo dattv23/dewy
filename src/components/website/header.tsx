@@ -189,9 +189,24 @@ function AccountActions({
       <Button
         asChild
         variant="ghost"
+        className="relative h-11 min-w-11 rounded-full px-2.5 font-normal hover:bg-zinc-100 lg:px-3"
+      >
+        <Link href={ROUTES.cart} aria-label={`Giỏ hàng, ${cartItemsCount} sản phẩm`}>
+          <ShoppingBag className="size-5" strokeWidth={1.6} />
+          <span className="hidden text-xs lg:inline">Giỏ hàng</span>
+          {cartItemsCount > 0 && <CartBadge count={cartItemsCount} />}
+        </Link>
+      </Button>
+
+      <Button
+        asChild
+        variant="ghost"
         className="hidden h-11 rounded-full px-3 font-normal hover:bg-zinc-100 sm:inline-flex"
       >
-        <Link href={ROUTES.login} aria-label="Đăng nhập hoặc đăng ký tài khoản">
+        <Link
+          href={user ? ROUTES.account : ROUTES.login}
+          aria-label={user ? "Mở hồ sơ của bạn" : "Đăng nhập hoặc đăng ký tài khoản"}
+        >
           <UserRound className="size-5" strokeWidth={1.6} />
           <span className="hidden max-w-28 truncate text-xs lg:inline">
             {user?.fullName ?? (isSessionLoading ? "Đang tải..." : "Tài khoản")}
@@ -211,18 +226,6 @@ function AccountActions({
           <LogOut className="size-4" />
         </Button>
       )}
-
-      <Button
-        asChild
-        variant="ghost"
-        className="relative h-11 min-w-11 rounded-full px-2.5 font-normal hover:bg-zinc-100 lg:px-3"
-      >
-        <Link href={ROUTES.cart} aria-label={`Giỏ hàng, ${cartItemsCount} sản phẩm`}>
-          <ShoppingBag className="size-5" strokeWidth={1.6} />
-          <span className="hidden text-xs lg:inline">Giỏ hàng</span>
-          {cartItemsCount > 0 && <CartBadge count={cartItemsCount} />}
-        </Link>
-      </Button>
     </div>
   )
 }
@@ -343,8 +346,15 @@ function MobileAuthActions({ user, isSessionLoading, onLogout }: AuthActionsProp
   if (user) {
     return (
       <div className="border-t border-zinc-200 bg-white px-6 py-5">
-        <p className="truncate text-sm font-semibold text-zinc-950">{user.fullName}</p>
-        <p className="mb-3 truncate text-xs text-zinc-500">{user.email}</p>
+        <SheetClose asChild>
+          <Link
+            href={ROUTES.account}
+            className="focus-visible:ring-ring block rounded-lg focus-visible:ring-2"
+          >
+            <p className="truncate text-sm font-semibold text-zinc-950">{user.fullName}</p>
+            <p className="mb-3 truncate text-xs text-zinc-500">{user.email}</p>
+          </Link>
+        </SheetClose>
         <Button type="button" variant="outline" className="w-full" onClick={() => void onLogout()}>
           <LogOut className="size-4" />
           Đăng xuất
