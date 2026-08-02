@@ -269,7 +269,10 @@ export default function HomePage() {
 
             <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
               {/* Card 1 */}
-              <div className="group relative flex aspect-3/4 flex-col justify-end overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950 p-6">
+              <Link
+                href="/danh-muc/cham-soc-da"
+                className="group relative flex aspect-3/4 flex-col justify-end overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950 p-6"
+              >
                 <Image
                   src="/category-skincare.jpg"
                   alt="Glass Skin Routine"
@@ -288,17 +291,17 @@ export default function HomePage() {
                     Bí quyết sở hữu làn da căng bóng mịn màng chuẩn Hàn với Ceramide & Hyaluronic
                     Acid.
                   </p>
-                  <Link
-                    href="/danh-muc/cham-soc-da"
-                    className="inline-flex items-center pt-1 text-xs font-semibold text-rose-300 hover:text-white"
-                  >
+                  <span className="inline-flex items-center pt-1 text-xs font-semibold text-rose-300 group-hover:text-white">
                     Khám phá dòng Skincare <ArrowRight className="ml-1 h-3.5 w-3.5" />
-                  </Link>
+                  </span>
                 </div>
-              </div>
+              </Link>
 
               {/* Card 2 */}
-              <div className="group relative flex aspect-3/4 flex-col justify-end overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950 p-6">
+              <Link
+                href="/danh-muc/trang-diem"
+                className="group relative flex aspect-3/4 flex-col justify-end overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950 p-6"
+              >
                 <Image
                   src="/category-makeup.jpg"
                   alt="Seoul Daily Makeup"
@@ -317,17 +320,17 @@ export default function HomePage() {
                     Son tint tự nhiên, kẹp mi cong nhẹ cùng lớp nền mỏng như sương cho vẻ ngoài rạng
                     rỡ.
                   </p>
-                  <Link
-                    href="/danh-muc/trang-diem"
-                    className="inline-flex items-center pt-1 text-xs font-semibold text-amber-300 hover:text-white"
-                  >
+                  <span className="inline-flex items-center pt-1 text-xs font-semibold text-amber-300 group-hover:text-white">
                     Xem sản phẩm trang điểm <ArrowRight className="ml-1 h-3.5 w-3.5" />
-                  </Link>
+                  </span>
                 </div>
-              </div>
+              </Link>
 
               {/* Card 3 */}
-              <div className="group relative flex aspect-3/4 flex-col justify-end overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950 p-6">
+              <Link
+                href="/yeu-cau-my-pham-han"
+                className="group relative flex aspect-3/4 flex-col justify-end overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950 p-6"
+              >
                 <Image
                   src="/category-bodycare.jpg"
                   alt="Special Request Service"
@@ -346,14 +349,11 @@ export default function HomePage() {
                     Không tìm thấy món đồ yêu thích? Dewy hỗ trợ gom order trực tiếp từ store Hàn
                     Quốc.
                   </p>
-                  <Link
-                    href="/yeu-cau-my-pham-han"
-                    className="inline-flex items-center pt-1 text-xs font-semibold text-emerald-300 hover:text-white"
-                  >
+                  <span className="inline-flex items-center pt-1 text-xs font-semibold text-emerald-300 group-hover:text-white">
                     Tạo đơn tìm sản phẩm <ArrowRight className="ml-1 h-3.5 w-3.5" />
-                  </Link>
+                  </span>
                 </div>
-              </div>
+              </Link>
             </div>
           </div>
         </section>
