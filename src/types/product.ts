@@ -42,5 +42,5 @@ export type CategoryDTO = {
   image: string
   icon?: string
   badge?: string
-  subcategories: SubCategoryDTO[]
+  subcategories?: SubCategoryDTO[]
 }

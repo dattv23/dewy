@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { ProfilePageClient } from "@/features/account/components/profile-page-client"
+import { ProfileView } from "@/features/account/views/profile-view"
 
 export const metadata: Metadata = {
   title: "Tài khoản của tôi",
@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 }
 
 export default function AccountPage() {
-  return <ProfilePageClient />
+  return <ProfileView />
 }

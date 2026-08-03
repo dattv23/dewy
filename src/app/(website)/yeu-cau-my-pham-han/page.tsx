@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { RequestPageClient } from "@/features/sourcing/components/request-page-client"
+import { RequestView } from "@/features/sourcing/views/request-view"
 
 export const metadata: Metadata = {
   title: "Yêu cầu mỹ phẩm Hàn theo nhu cầu | Gửi form trong 1 phút",
@@ -8,5 +8,5 @@ export const metadata: Metadata = {
 }
 
 export default function RequestPage() {
-  return <RequestPageClient />
+  return <RequestView />
 }

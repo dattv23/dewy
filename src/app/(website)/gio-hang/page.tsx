@@ -1,5 +1,5 @@
 ﻿import type { Metadata } from "next"
-import { CartPageClient } from "@/features/cart/components/cart-page-client"
+import { CartView } from "@/features/cart/views/cart-view"
 
 export const metadata: Metadata = {
   title: "Gi? hàng | M? ph?m Hàn",
@@ -8,5 +8,5 @@ export const metadata: Metadata = {
 }
 
 export default function CartPage() {
-  return <CartPageClient />
+  return <CartView />
 }

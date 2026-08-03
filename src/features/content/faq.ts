@@ -70,3 +70,5 @@ export const faqGroups = [
     ],
   },
 ]
+
+export type FAQGroup = (typeof faqGroups)[number]

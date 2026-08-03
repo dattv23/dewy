@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { FAQClient } from "@/features/content/components/faq-client"
+import { FAQView } from "@/features/content/views/faq-view"
 
 export const metadata: Metadata = {
   title: "FAQ mua hàng và tìm theo yêu cầu",
@@ -8,5 +8,5 @@ export const metadata: Metadata = {
 }
 
 export default function FAQPage() {
-  return <FAQClient />
+  return <FAQView />
 }

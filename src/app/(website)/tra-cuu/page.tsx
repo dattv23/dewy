@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { TrackingPageClient } from "@/features/orders/components/tracking-page-client"
+import { TrackingView } from "@/features/orders/views/tracking-view"
 
 export const metadata: Metadata = {
   title: "Tra cứu đơn hàng và tìm theo yêu cầu",
@@ -8,5 +8,5 @@ export const metadata: Metadata = {
 }
 
 export default function TrackingPage() {
-  return <TrackingPageClient />
+  return <TrackingView />
 }

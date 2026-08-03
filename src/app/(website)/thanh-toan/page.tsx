@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { CheckoutClient } from "@/features/checkout/components/checkout-client"
+import { CheckoutView } from "@/features/checkout/views/checkout-view"
 
 export const metadata: Metadata = {
   title: "Thanh toán | Mỹ phẩm Hàn",
@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 }
 
 export default function CheckoutPage() {
-  return <CheckoutClient />
+  return <CheckoutView />
 }
