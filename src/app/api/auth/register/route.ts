@@ -13,6 +13,7 @@ export async function POST(request: Request) {
   try {
     await registerAccount({
       name: input.data.name,
+      phone: input.data.phone,
       email: input.data.email,
       password: input.data.password,
     })

@@ -20,6 +20,7 @@ type LoginCredentials = {
 
 type RegisterAccountInput = LoginCredentials & {
   name: string
+  phone: string
 }
 
 export type LoginSession = z.infer<typeof loginResponseSchema>["data"]

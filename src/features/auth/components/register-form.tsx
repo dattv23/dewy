@@ -29,6 +29,7 @@ import { AuthRequestError, register } from "@/features/auth/services/auth.servic
 
 const defaultValues: RegisterInput = {
   name: "",
+  phone: "",
   email: "",
   password: "",
   terms: false,
@@ -106,6 +107,27 @@ export function RegisterForm() {
                     {...field}
                     autoComplete="name"
                     placeholder="Tên của bạn"
+                    className="h-12 rounded-xl border-zinc-300 bg-white px-4"
+                  />
+                </FormControl>
+                <FormMessage className="text-xs" />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="phone"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Số điện thoại</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    type="tel"
+                    inputMode="tel"
+                    autoComplete="tel"
+                    placeholder="0912 345 678"
                     className="h-12 rounded-xl border-zinc-300 bg-white px-4"
                   />
                 </FormControl>
