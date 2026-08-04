@@ -8,10 +8,12 @@ import { AccountNavigation } from "@/features/account/components/account-navigat
 import { AccountOverview } from "@/features/account/components/account-overview"
 import { AccountSecurity } from "@/features/account/components/account-security"
 import { OrderLookup } from "@/features/account/components/order-lookup"
+import { useCustomerProfile } from "@/features/account/hooks/use-customer-profile"
 import { useSession } from "@/features/auth/hooks/use-session"
 
 export function ProfileView() {
   const { user, isLoading, logout } = useSession()
+  const customer = useCustomerProfile(Boolean(user) && !isLoading)
   const router = useRouter()
 
   async function handleLogout() {
@@ -27,15 +29,30 @@ export function ProfileView() {
           defaultValue="overview"
           className="gap-6 lg:grid lg:grid-cols-[268px_1fr] lg:items-start lg:gap-8"
         >
-          <AccountNavigation user={user} isLoading={isLoading} />
+          <AccountNavigation
+            user={user}
+            profile={customer.profile}
+            isLoading={isLoading || customer.isLoading}
+          />
           <TabsContent value="overview" className="mt-0">
-            <AccountOverview user={user} isLoading={isLoading} />
+            <AccountOverview
+              user={user}
+              profile={customer.profile}
+              isLoading={isLoading || customer.isLoading}
+              hasError={customer.hasError}
+              onRetry={customer.retry}
+            />
           </TabsContent>
           <TabsContent value="orders" className="mt-0">
             <OrderLookup />
           </TabsContent>
           <TabsContent value="addresses" className="mt-0">
-            <AccountAddresses />
+            <AccountAddresses
+              addresses={customer.profile?.addresses ?? []}
+              isLoading={isLoading || customer.isLoading}
+              hasError={customer.hasError}
+              onRetry={customer.retry}
+            />
           </TabsContent>
           <TabsContent value="security" className="mt-0">
             <AccountSecurity user={user} isLoading={isLoading} onLogout={handleLogout} />

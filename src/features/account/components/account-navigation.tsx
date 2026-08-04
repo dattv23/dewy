@@ -1,6 +1,7 @@
 import { KeyRound, LayoutDashboard, MapPin, PackageSearch, UserRound } from "lucide-react"
 import { TabsList, TabsTrigger } from "@/components/ui/tabs"
 import type { AuthSession } from "@/types/auth"
+import type { CustomerProfile } from "@/types/customer"
 
 const accountSections = [
   { value: "overview", label: "Tổng quan", icon: LayoutDashboard },
@@ -11,9 +12,11 @@ const accountSections = [
 
 export function AccountNavigation({
   user,
+  profile,
   isLoading,
 }: {
   user: AuthSession | null
+  profile: CustomerProfile | null
   isLoading: boolean
 }) {
   return (
@@ -23,10 +26,10 @@ export function AccountNavigation({
           <UserRound className="size-5" strokeWidth={1.6} />
         </div>
         <p className="truncate text-sm font-semibold text-zinc-950">
-          {isLoading ? "Đang tải..." : (user?.fullName ?? "Khách của Dewy")}
+          {isLoading ? "Đang tải..." : (profile?.fullName ?? user?.fullName ?? "Khách của Dewy")}
         </p>
         <p className="mt-1 truncate text-xs text-zinc-500">
-          {user?.email ?? "Đăng nhập để quản lý tài khoản"}
+          {profile?.email ?? user?.email ?? "Đăng nhập để quản lý tài khoản"}
         </p>
       </div>
       <TabsList
