@@ -8,7 +8,7 @@ export const SITE_CONFIG = {
   icons: {
     light: "/icon-light-32x32.png",
     dark: "/icon-dark-32x32.png",
-    default: "/icon.svg",
+    default: "/icon-512.png",
     apple: "/apple-icon.png",
   },
 } as const

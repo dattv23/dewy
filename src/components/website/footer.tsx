@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { BrandMark } from "@/components/brand-mark"
 import { SITE_CONFIG } from "@/config/site"
 
 export function Footer() {
@@ -7,7 +8,10 @@ export function Footer() {
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-7 px-4 py-9 md:py-10">
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <p className="text-primary text-lg font-bold tracking-tight">Dewy</p>
+            <div className="flex items-center gap-2.5">
+              <BrandMark className="size-10" />
+              <p className="text-primary text-lg font-bold tracking-tight">Dewy</p>
+            </div>
             <p className="text-foreground mt-1 text-sm font-semibold">Mua nhanh mỹ phẩm Hàn</p>
             <p className="text-muted-foreground mt-2 text-sm">
               Chỉ tập trung vào sản phẩm, yêu cầu tìm theo yêu cầu và theo dõi trạng thái đơn/yêu

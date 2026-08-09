@@ -14,6 +14,7 @@ import {
   UserRound,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { BrandMark } from "@/components/brand-mark"
 import { Input } from "@/components/ui/input"
 import {
   Sheet,
@@ -30,6 +31,7 @@ import { cartCount, getCartEventName, getCartItems } from "@/features/cart/cart-
 import { useSession } from "@/features/auth/hooks/use-session"
 import { categories } from "@/features/products/data/products"
 import type { AuthSession } from "@/types/auth"
+import { cn } from "@/lib/utils"
 
 const HEADER_COLLAPSE_THRESHOLD = 144
 const HEADER_EXPAND_THRESHOLD = 24
@@ -157,17 +159,16 @@ function Brand({ compact }: { compact: boolean }) {
   return (
     <Link
       href={ROUTES.home}
-      className="group flex flex-col items-center justify-center justify-self-center text-zinc-950"
+      className="group flex items-center justify-center justify-self-center text-zinc-950"
       aria-label={`${SITE_CONFIG.name} - Trang chủ`}
     >
-      <span className="font-serif text-[25px] leading-none font-semibold tracking-[0.18em] uppercase transition-colors group-hover:text-rose-900 lg:text-[32px]">
-        {SITE_CONFIG.name}
-      </span>
-      {!compact && (
-        <span className="mt-1 hidden text-[8px] font-medium tracking-[0.34em] text-zinc-500 uppercase lg:block">
-          Seoul select
-        </span>
-      )}
+      <BrandMark
+        className={cn(
+          "size-10 transition-transform duration-200 group-hover:scale-105 lg:size-12",
+          compact && "size-9 lg:size-10",
+        )}
+        priority
+      />
     </Link>
   )
 }

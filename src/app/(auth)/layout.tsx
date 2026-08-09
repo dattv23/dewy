@@ -2,6 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 import type { ReactNode } from "react"
 import { Check, PackageCheck, ShieldCheck } from "lucide-react"
+import { BrandMark } from "@/components/brand-mark"
 import { SITE_CONFIG } from "@/config/site"
 
 const benefits = [
@@ -29,9 +30,13 @@ export default function AuthLayout({ children }: Readonly<{ children: ReactNode 
         <div className="relative z-10 flex min-h-svh flex-col justify-between p-10 xl:p-14">
           <Link
             href="/"
-            className="w-fit text-2xl font-bold tracking-[0.08em] text-white uppercase"
+            className="flex w-fit items-center gap-3 text-2xl font-bold tracking-[0.08em] text-white uppercase"
+            aria-label={`${SITE_CONFIG.name} - Trang chủ`}
           >
-            {SITE_CONFIG.name}
+            <span className="flex size-12 items-center justify-center rounded-xl bg-white">
+              <BrandMark className="size-10" priority />
+            </span>
+            <span>{SITE_CONFIG.name}</span>
           </Link>
 
           <div className="max-w-xl pb-2 text-white">
@@ -66,9 +71,11 @@ export default function AuthLayout({ children }: Readonly<{ children: ReactNode 
       <section className="relative flex min-h-svh items-center justify-center px-4 py-20 sm:px-8 lg:py-12">
         <Link
           href="/"
-          className="absolute top-6 left-5 text-xl font-bold tracking-[0.08em] text-zinc-950 uppercase lg:hidden"
+          className="absolute top-5 left-5 flex items-center gap-2 text-xl font-bold tracking-[0.08em] text-zinc-950 uppercase lg:hidden"
+          aria-label={`${SITE_CONFIG.name} - Trang chủ`}
         >
-          {SITE_CONFIG.name}
+          <BrandMark className="size-9" priority />
+          <span>{SITE_CONFIG.name}</span>
         </Link>
         {children}
       </section>
