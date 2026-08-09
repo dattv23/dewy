@@ -6,7 +6,7 @@ import { SourcingChart } from "@/features/admin/components/dashboard/sourcing-ch
 
 export function AdminDashboardOverview() {
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex min-w-0 flex-col gap-6">
       <div className="flex flex-col gap-1.5">
         <h1 className="text-2xl font-semibold tracking-tight text-balance">Dashboard vận hành</h1>
         <p className="text-muted-foreground max-w-[70ch] text-base text-pretty sm:text-sm">
