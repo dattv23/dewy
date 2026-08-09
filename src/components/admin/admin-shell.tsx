@@ -2,59 +2,96 @@
 
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { House, LogOut, Menu, Search } from "lucide-react"
-import { ADMIN_NAVIGATION } from "@/config/admin-navigation"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { ChevronsUpDown, House, LogOut, Search } from "lucide-react"
+import { ADMIN_NAVIGATION, getAdminNavigationItem } from "@/config/admin-navigation"
 import { ROUTES } from "@/constants/routes"
 import { logout } from "@/features/auth/services/auth.service"
+import { BrandMark } from "@/components/brand-mark"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
+import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Input } from "@/components/ui/input"
+import { Separator } from "@/components/ui/separator"
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuBadge,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+  SidebarRail,
+  SidebarTrigger,
+  useSidebar,
+} from "@/components/ui/sidebar"
 
-function Navigation({ onNavigate }: { onNavigate?: () => void }) {
-  const pathname = usePathname()
-
-  return (
-    <nav className="space-y-1">
-      {ADMIN_NAVIGATION.map((item) => {
-        const Icon = item.icon
-        const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`)
-
-        return (
-          <Link
-            key={item.href}
-            href={item.href}
-            onClick={onNavigate}
-            className={cn(
-              "flex items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors",
-              isActive
-                ? "bg-primary/10 text-primary"
-                : "text-muted-foreground hover:bg-muted hover:text-foreground",
-            )}
-          >
-            <span className="flex items-center gap-2">
-              <Icon className="h-4 w-4" />
-              {item.label}
-            </span>
-            {item.href === "/admin/orders" ? (
-              <Badge className="bg-primary/20 text-primary h-5 px-1.5">42</Badge>
-            ) : null}
-          </Link>
-        )
-      })}
-    </nav>
-  )
+function initials(name: string) {
+  return name
+    .split(" ")
+    .filter(Boolean)
+    .slice(-2)
+    .map((part) => part[0]?.toUpperCase())
+    .join("")
 }
 
-export function AdminShell({
-  children,
-  userName,
-}: {
-  children: React.ReactNode
-  userName: string
-}) {
+function AdminSidebarNavigation() {
+  const pathname = usePathname()
+  const { setOpenMobile } = useSidebar()
+
+  return ADMIN_NAVIGATION.map((group) => (
+    <SidebarGroup key={group.label}>
+      <SidebarGroupLabel>{group.label}</SidebarGroupLabel>
+      <SidebarGroupContent>
+        <SidebarMenu>
+          {group.items.map((item) => {
+            const Icon = item.icon
+            const isActive =
+              pathname === item.href ||
+              (item.href !== "/admin" && pathname.startsWith(`${item.href}/`))
+
+            return (
+              <SidebarMenuItem key={item.href}>
+                <SidebarMenuButton asChild isActive={isActive} tooltip={item.label}>
+                  <Link href={item.href} onClick={() => setOpenMobile(false)}>
+                    <Icon />
+                    <span>{item.label}</span>
+                  </Link>
+                </SidebarMenuButton>
+                {item.badge ? <SidebarMenuBadge>{item.badge}</SidebarMenuBadge> : null}
+              </SidebarMenuItem>
+            )
+          })}
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
+  ))
+}
+
+function AdminUserMenu({ userName }: { userName: string }) {
   const router = useRouter()
+  const { isMobile } = useSidebar()
 
   async function handleLogout() {
     await logout()
@@ -63,60 +100,164 @@ export function AdminShell({
   }
 
   return (
-    <div className="min-h-screen bg-[#f8fbf9]">
-      <header className="sticky top-0 z-30 border-b bg-white/95 backdrop-blur">
-        <div className="mx-auto flex h-14 w-full max-w-380 items-center gap-3 px-4">
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="outline" size="icon" className="md:hidden">
-                <Menu className="h-4 w-4" />
-                <span className="sr-only">Mở menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="w-72 p-0">
-              <div className="border-b px-4 py-3">
-                <p className="text-foreground text-sm font-semibold">Admin Dewy</p>
-                <p className="text-muted-foreground text-xs">Hệ thống vận hành nội bộ</p>
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <SidebarMenuButton size="lg" tooltip={userName}>
+              <Avatar className="rounded-lg">
+                <AvatarFallback className="rounded-lg">{initials(userName) || "AD"}</AvatarFallback>
+              </Avatar>
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-medium">{userName}</span>
+                <span className="text-muted-foreground truncate text-xs">Quản trị viên</span>
               </div>
-              <div className="p-3">
-                <Navigation />
+              <ChevronsUpDown className="ml-auto" />
+            </SidebarMenuButton>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            className="w-(--radix-dropdown-menu-trigger-width) min-w-56"
+            side={isMobile ? "bottom" : "right"}
+            align="end"
+            sideOffset={4}
+          >
+            <DropdownMenuLabel className="font-normal">
+              <div className="flex items-center gap-2">
+                <Avatar className="rounded-lg">
+                  <AvatarFallback className="rounded-lg">
+                    {initials(userName) || "AD"}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-medium">{userName}</span>
+                  <span className="text-muted-foreground truncate text-xs">Quản trị viên Dewy</span>
+                </div>
               </div>
-            </SheetContent>
-          </Sheet>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuItem asChild>
+                <Link href={ROUTES.home}>
+                  <House />
+                  Xem website
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuItem variant="destructive" onSelect={() => void handleLogout()}>
+                <LogOut />
+                Đăng xuất
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </SidebarMenuItem>
+    </SidebarMenu>
+  )
+}
 
-          <div className="hidden md:block">
-            <p className="text-foreground text-sm font-semibold">Admin Dewy</p>
-          </div>
+function AdminSidebar({ userName }: { userName: string }) {
+  return (
+    <Sidebar collapsible="icon" variant="inset">
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild size="lg" tooltip="Admin Dewy">
+              <Link href={ROUTES.admin}>
+                <div className="bg-sidebar-primary flex size-8 items-center justify-center overflow-hidden rounded-lg">
+                  <BrandMark className="size-7 rounded-md bg-white" />
+                </div>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-semibold">Dewy Admin</span>
+                  <span className="text-muted-foreground truncate text-xs">Vận hành nội bộ</span>
+                </div>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarHeader>
+      <SidebarContent>
+        <AdminSidebarNavigation />
+      </SidebarContent>
+      <SidebarFooter>
+        <AdminUserMenu userName={userName} />
+      </SidebarFooter>
+      <SidebarRail />
+    </Sidebar>
+  )
+}
 
-          <div className="relative ml-auto w-full max-w-md">
-            <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
-            <Input className="h-9 pl-9" placeholder="Tìm nhanh SKU, mã đơn, SĐT..." />
-          </div>
+function AdminHeader() {
+  const pathname = usePathname()
+  const currentItem = getAdminNavigationItem(pathname)
 
-          <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
-            <Link href={ROUTES.home}>
-              <House className="size-4" />
-              Xem website
-            </Link>
-          </Button>
+  return (
+    <header className="bg-background/95 sticky top-0 flex h-14 shrink-0 items-center gap-2 border-b backdrop-blur">
+      <div className="flex min-w-0 flex-1 items-center gap-2 px-4 lg:px-6">
+        <SidebarTrigger className="-ml-1" />
+        <Separator orientation="vertical" className="data-[orientation=vertical]:h-4" />
+        <Breadcrumb className="min-w-0">
+          <BreadcrumbList className="flex-nowrap">
+            <BreadcrumbItem className="hidden sm:inline-flex">
+              <BreadcrumbLink asChild>
+                <Link href={ROUTES.admin}>Admin</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator className="hidden sm:block" />
+            <BreadcrumbItem className="min-w-0">
+              <BreadcrumbPage className="truncate">
+                {currentItem?.breadcrumb ?? "Quản trị hệ thống"}
+              </BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
 
-          <Badge variant="secondary" className="hidden h-8 max-w-48 px-2 text-xs sm:inline-flex">
-            <span className="truncate">{userName}</span>
-          </Badge>
-
-          <Button type="button" variant="ghost" size="icon" onClick={() => void handleLogout()}>
-            <LogOut className="size-4" />
-            <span className="sr-only">Đăng xuất</span>
-          </Button>
+        <div className="relative ml-auto hidden w-full max-w-sm md:block">
+          <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2" />
+          <Input
+            className="h-8 pl-9"
+            placeholder="Tìm SKU, mã đơn, SĐT..."
+            aria-label="Tìm nhanh"
+          />
         </div>
-      </header>
-
-      <div className="mx-auto grid w-full max-w-380 gap-4 px-4 py-4 md:grid-cols-[260px_1fr]">
-        <aside className="hidden rounded-xl border bg-white p-3 md:sticky md:top-18 md:block md:h-[calc(100vh-88px)] md:overflow-auto">
-          <Navigation />
-        </aside>
-        <main>{children}</main>
+        <Button asChild variant="ghost" size="sm" className="hidden lg:inline-flex">
+          <Link href={ROUTES.home}>
+            <House data-icon="inline-start" />
+            Website
+          </Link>
+        </Button>
       </div>
-    </div>
+    </header>
+  )
+}
+
+export function AdminShell({
+  children,
+  userName,
+  defaultOpen,
+}: {
+  children: React.ReactNode
+  userName: string
+  defaultOpen: boolean
+}) {
+  return (
+    <SidebarProvider
+      defaultOpen={defaultOpen}
+      style={
+        {
+          "--sidebar-width": "17rem",
+          "--sidebar-width-icon": "3rem",
+        } as React.CSSProperties
+      }
+    >
+      <AdminSidebar userName={userName} />
+      <SidebarInset className="min-w-0">
+        <AdminHeader />
+        <div className="@container/main flex flex-1 flex-col">
+          <div className="flex flex-1 flex-col gap-4 p-4 lg:p-6">{children}</div>
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
   )
 }

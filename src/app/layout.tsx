@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     icon: [
       { url: SITE_CONFIG.icons.light, media: "(prefers-color-scheme: light)" },
       { url: SITE_CONFIG.icons.dark, media: "(prefers-color-scheme: dark)" },
-      { url: SITE_CONFIG.icons.default, type: "image/svg+xml" },
+      { url: SITE_CONFIG.icons.default, type: "image/png" },
     ],
     apple: SITE_CONFIG.icons.apple,
   },
