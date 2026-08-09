@@ -8,19 +8,29 @@ import { useCatalog } from "@/features/products/hooks/use-catalog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { getCategoryBySlug, getProductsByCategory } from "@/features/products/data/products"
+import { getProductsByCategory } from "@/features/products/data/products"
 import { CATALOG_CONFIG, type CatalogSort } from "@/config/catalog"
-import { CategoryNotFound, EmptyCatalog } from "@/features/products/components/catalog-states"
+import {
+  CategoryNotFound,
+  CategoryUnavailable,
+  EmptyCatalog,
+} from "@/features/products/components/catalog-states"
 import { CategoryHero } from "@/features/products/components/category-hero"
+import type { Category } from "@/types/category"
 
-type CategoryViewProps = { slug: string; initialQuery: string }
+type CategoryViewProps = {
+  slug: string
+  initialQuery: string
+  category: Category | null
+  categoryStatus: "ready" | "not-found" | "unavailable"
+}
 
-export function CategoryView({ slug, initialQuery }: CategoryViewProps) {
-  const category = getCategoryBySlug(slug)
+export function CategoryView({ slug, initialQuery, category, categoryStatus }: CategoryViewProps) {
   const products = useMemo(() => (category ? getProductsByCategory(slug) : []), [category, slug])
   const catalog = useCatalog(products, initialQuery)
 
-  if (!category) return <CategoryNotFound />
+  if (categoryStatus === "unavailable") return <CategoryUnavailable />
+  if (categoryStatus === "not-found" || !category) return <CategoryNotFound />
 
   const activeFilterCount = Object.values(catalog.filters).filter((value) => value !== "all").length
 

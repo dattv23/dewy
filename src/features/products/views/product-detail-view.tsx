@@ -7,7 +7,6 @@ import { ProductCard } from "@/features/products/components/product-card"
 import {
   allProducts,
   formatVnd,
-  getCategoryBySlug,
   getProductBySlug,
   statusLabel,
 } from "@/features/products/data/products"
@@ -15,17 +14,18 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import type { ProductCardDTO } from "@/types/product"
 import { ProductInfo, ProductNotFound } from "@/features/products/components/product-detail-states"
+import type { Category } from "@/types/category"
 
 type ProductDetailViewProps = {
   slug: string
+  category: Category | null
 }
 
-export function ProductDetailView({ slug }: ProductDetailViewProps) {
+export function ProductDetailView({ slug, category }: ProductDetailViewProps) {
   const product = getProductBySlug(slug)
 
   if (!product) return <ProductNotFound />
 
-  const category = getCategoryBySlug(product.categorySlug)
   const relatedProducts = allProducts
     .filter((item) => item.categorySlug === product.categorySlug && item.id !== product.id)
     .slice(0, 4)

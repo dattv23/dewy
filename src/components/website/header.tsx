@@ -29,8 +29,8 @@ import { ROUTES } from "@/constants/routes"
 import { SITE_CONFIG } from "@/config/site"
 import { cartCount, getCartEventName, getCartItems } from "@/features/cart/cart-store"
 import { useSession } from "@/features/auth/hooks/use-session"
-import { categories } from "@/features/products/data/products"
 import type { AuthSession } from "@/types/auth"
+import type { Category } from "@/types/category"
 import { cn } from "@/lib/utils"
 
 const HEADER_COLLAPSE_THRESHOLD = 144
@@ -241,10 +241,11 @@ function CartBadge({ count }: { count: number }) {
 
 function MobileMenu({
   pathname,
+  categories,
   user,
   isSessionLoading,
   onLogout,
-}: { pathname: string } & AuthActionsProps) {
+}: { pathname: string; categories: Category[] } & AuthActionsProps) {
   const [open, setOpen] = useState(false)
 
   return (
@@ -264,7 +265,7 @@ function MobileMenu({
           <div className="border-b border-zinc-200 px-6 py-4">
             <SearchBox compact onSubmit={() => setOpen(false)} />
           </div>
-          <MobileMenuNavigation pathname={pathname} />
+          <MobileMenuNavigation pathname={pathname} categories={categories} />
           <MobileAuthActions user={user} isSessionLoading={isSessionLoading} onLogout={onLogout} />
         </SheetContent>
       </Sheet>
@@ -285,7 +286,13 @@ function MobileMenuHeader() {
   )
 }
 
-function MobileMenuNavigation({ pathname }: { pathname: string }) {
+function MobileMenuNavigation({
+  pathname,
+  categories,
+}: {
+  pathname: string
+  categories: Category[]
+}) {
   return (
     <nav className="flex-1 overflow-y-auto px-6 py-5" aria-label="Menu trên thiết bị di động">
       <MobileMenuSectionLabel>Mua sắm theo danh mục</MobileMenuSectionLabel>
@@ -392,12 +399,14 @@ type HeaderMainRowProps = {
   cartItemsCount: number
   pathname: string
   compact: boolean
+  categories: Category[]
 } & AuthActionsProps
 
 function HeaderMainRow({
   cartItemsCount,
   pathname,
   compact,
+  categories,
   user,
   isSessionLoading,
   onLogout,
@@ -410,6 +419,7 @@ function HeaderMainRow({
     >
       <MobileMenu
         pathname={pathname}
+        categories={categories}
         user={user}
         isSessionLoading={isSessionLoading}
         onLogout={onLogout}
@@ -428,7 +438,15 @@ function HeaderMainRow({
   )
 }
 
-function DesktopNavigation({ pathname, hidden }: { pathname: string; hidden: boolean }) {
+function DesktopNavigation({
+  pathname,
+  hidden,
+  categories,
+}: {
+  pathname: string
+  hidden: boolean
+  categories: Category[]
+}) {
   return (
     <div
       className={`hidden overflow-hidden border-t border-zinc-100 transition-[height,opacity] duration-300 lg:block ${
@@ -436,14 +454,20 @@ function DesktopNavigation({ pathname, hidden }: { pathname: string; hidden: boo
       }`}
     >
       <div className="mx-auto flex h-13 max-w-360 items-center justify-between px-10">
-        <DesktopCategoryNavigation pathname={pathname} />
+        <DesktopCategoryNavigation pathname={pathname} categories={categories} />
         <DesktopServiceNavigation />
       </div>
     </div>
   )
 }
 
-function DesktopCategoryNavigation({ pathname }: { pathname: string }) {
+function DesktopCategoryNavigation({
+  pathname,
+  categories,
+}: {
+  pathname: string
+  categories: Category[]
+}) {
   return (
     <nav className="flex h-full items-center gap-8" aria-label="Danh mục sản phẩm">
       {categories.map((category) => {
@@ -487,7 +511,13 @@ function DesktopServiceNavigation() {
   )
 }
 
-function MobileCategoryNavigation({ pathname }: { pathname: string }) {
+function MobileCategoryNavigation({
+  pathname,
+  categories,
+}: {
+  pathname: string
+  categories: Category[]
+}) {
   return (
     <div className="border-t border-zinc-100 bg-white lg:hidden">
       <nav
@@ -525,7 +555,7 @@ function CartCountAnnouncement({ count }: { count: number }) {
   )
 }
 
-export function Header() {
+export function Header({ categories }: { categories: Category[] }) {
   const pathname = usePathname()
   const cartItemsCount = useCartCount()
   const scrolled = useHeaderScrolled()
@@ -543,12 +573,13 @@ export function Header() {
           cartItemsCount={cartItemsCount}
           pathname={pathname}
           compact={scrolled}
+          categories={categories}
           user={user}
           isSessionLoading={isSessionLoading}
           onLogout={logout}
         />
-        <DesktopNavigation pathname={pathname} hidden={scrolled} />
-        <MobileCategoryNavigation pathname={pathname} />
+        <DesktopNavigation pathname={pathname} hidden={scrolled} categories={categories} />
+        <MobileCategoryNavigation pathname={pathname} categories={categories} />
       </header>
       <CartCountAnnouncement count={cartItemsCount} />
     </>

@@ -1,14 +1,14 @@
 import Image from "next/image"
 import Link from "next/link"
 import { Sparkles } from "lucide-react"
-import type { CategoryDTO } from "@/types/product"
+import type { Category } from "@/types/category"
 
-export function CategoryHero({ category }: { category: CategoryDTO }) {
+export function CategoryHero({ category }: { category: Category }) {
   return (
     <section className="border-b border-zinc-200/70 bg-[#f7f4f2]">
       <div className="relative min-h-80 overflow-hidden bg-zinc-950 sm:min-h-105">
         <Image
-          src={category.image}
+          src={category.imageUrl!}
           alt={`Bộ sưu tập ${category.name}`}
           fill
           priority

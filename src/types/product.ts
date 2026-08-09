@@ -26,21 +26,3 @@ export type ProductDetailDTO = ProductCardDTO & {
   directions: string[]
   cautions: string[]
 }
-
-export type SubCategoryDTO = {
-  slug: string
-  name: string
-  description?: string
-  icon?: string
-  itemCount?: number
-}
-
-export type CategoryDTO = {
-  slug: string
-  name: string
-  description: string
-  image: string
-  icon?: string
-  badge?: string
-  subcategories?: SubCategoryDTO[]
-}

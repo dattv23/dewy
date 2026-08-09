@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { ProductDetailView } from "@/features/products/views/product-detail-view"
 import { getProductBySlug } from "@/features/products/data/products"
+import { getStorefrontCategoryBySlug } from "@/features/products/services/category.service"
 
 type PageProps = {
   params: Promise<{ slug: string }>
@@ -25,6 +26,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ProductDetailPage({ params }: PageProps) {
   const { slug } = await params
+  const product = getProductBySlug(slug)
+  const category = product
+    ? await getStorefrontCategoryBySlug(product.categorySlug).catch(() => null)
+    : null
 
-  return <ProductDetailView slug={slug} />
+  return <ProductDetailView slug={slug} category={category} />
 }

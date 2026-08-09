@@ -1,8 +1,12 @@
 import type { Metadata } from "next"
 
 import { CategoryView } from "@/features/products/views/category-view"
-import { getCategoryBySlug } from "@/features/products/data/products"
+import {
+  getStorefrontCategoryBySlug,
+  StorefrontCategoryUpstreamError,
+} from "@/features/products/services/category.service"
 import { DEFAULT_CATEGORY_SLUG } from "@/constants/routes"
+import type { Category } from "@/types/category"
 
 type PageProps = {
   params: Promise<{ slug?: string[] }>
@@ -14,9 +18,23 @@ async function getSlug(params: PageProps["params"]) {
   return slug?.[0] ?? DEFAULT_CATEGORY_SLUG
 }
 
+async function loadCategory(slug: string): Promise<{
+  category: Category | null
+  categoryStatus: "ready" | "not-found" | "unavailable"
+}> {
+  try {
+    return { category: await getStorefrontCategoryBySlug(slug), categoryStatus: "ready" }
+  } catch (error) {
+    if (error instanceof StorefrontCategoryUpstreamError && error.status === 404) {
+      return { category: null, categoryStatus: "not-found" }
+    }
+    return { category: null, categoryStatus: "unavailable" }
+  }
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const slug = await getSlug(params)
-  const category = getCategoryBySlug(slug)
+  const { category } = await loadCategory(slug)
   const categoryName = category?.name ?? "Danh mục"
 
   return {
@@ -28,6 +46,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function CategoryPage({ params, searchParams }: PageProps) {
   const slug = await getSlug(params)
   const { q } = await searchParams
+  const result = await loadCategory(slug)
 
-  return <CategoryView slug={slug} initialQuery={q ?? ""} />
+  return <CategoryView slug={slug} initialQuery={q ?? ""} {...result} />
 }

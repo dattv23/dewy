@@ -13,6 +13,20 @@ export function CategoryNotFound() {
   )
 }
 
+export function CategoryUnavailable() {
+  return (
+    <div className="mx-auto flex min-h-96 w-full max-w-6xl flex-col items-center justify-center px-4 py-10 text-center">
+      <h1 className="text-2xl font-bold">Không thể tải danh mục</h1>
+      <p className="text-muted-foreground mt-2">
+        Dữ liệu danh mục đang tạm thời không khả dụng. Vui lòng thử lại sau.
+      </p>
+      <Button asChild className="mt-4 h-11 rounded-lg">
+        <Link href="/">Về trang chủ</Link>
+      </Button>
+    </div>
+  )
+}
+
 export function EmptyCatalog({ onReset }: { onReset: () => void }) {
   return (
     <div className="bg-card rounded-xl border p-6 text-center">

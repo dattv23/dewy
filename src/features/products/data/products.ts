@@ -1,25 +1,5 @@
-import type { CategoryDTO, ProductCardDTO, ProductDetailDTO, ProductStatus } from "@/types/product"
-
-export const categories: CategoryDTO[] = [
-  {
-    slug: "cham-soc-da",
-    name: "Chăm sóc da",
-    description: "Serum, kem dưỡng, chống nắng và làm sạch da hằng ngày.",
-    image: "/category-skincare.jpg",
-  },
-  {
-    slug: "trang-diem",
-    name: "Trang điểm",
-    description: "Son, mascara, má hồng với tông màu dễ dùng cho mỗi ngày.",
-    image: "/category-makeup.jpg",
-  },
-  {
-    slug: "cham-soc-co-the",
-    name: "Chăm sóc cơ thể",
-    description: "Dưỡng thể, tẩy da chết và dầu dưỡng giúp da mềm mịn.",
-    image: "/category-bodycare.jpg",
-  },
-]
+import { COMMERCE_CONFIG } from "@/config/commerce"
+import type { ProductCardDTO, ProductDetailDTO, ProductStatus } from "@/types/product"
 
 const productsData: ProductDetailDTO[] = [
   {
@@ -209,10 +189,6 @@ export const featuredProducts: ProductCardDTO[] = productsData.slice(0, 6).map(t
 
 export const allProducts: ProductCardDTO[] = productsData.map(toProductCard)
 
-export function getCategoryBySlug(slug: string) {
-  return categories.find((item) => item.slug === slug)
-}
-
 export function getProductBySlug(slug: string) {
   return productsData.find((item) => item.slug === slug)
 }
@@ -264,4 +240,3 @@ function toProductCard(product: ProductDetailDTO): ProductCardDTO {
     highlights: product.benefits,
   }
 }
-import { COMMERCE_CONFIG } from "@/config/commerce"
