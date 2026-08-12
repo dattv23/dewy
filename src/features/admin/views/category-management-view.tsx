@@ -155,12 +155,16 @@ export function AdminCategoryView() {
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <CategoryPageHeader onCreate={openCreate} />
+    <div className="flex min-h-0 flex-1 flex-col gap-2">
+      <CategoryPageHeader
+        categories={categories}
+        filters={filters}
+        onFiltersChange={setFilters}
+        onCreate={openCreate}
+      />
       <CategoryListCard
         categories={categories}
         visibleCategories={visibleCategories}
-        filters={filters}
         loading={loading}
         refreshing={refreshing}
         loadError={loadError}
@@ -168,7 +172,6 @@ export function AdminCategoryView() {
         page={page}
         totalItems={totalItems}
         totalPages={totalPages}
-        onFiltersChange={setFilters}
         onReload={() => void load()}
         onCreate={openCreate}
         onEdit={openEdit}

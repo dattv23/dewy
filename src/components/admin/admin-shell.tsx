@@ -243,6 +243,7 @@ export function AdminShell({
 }) {
   return (
     <SidebarProvider
+      className="h-svh min-h-0 overflow-hidden"
       defaultOpen={defaultOpen}
       style={
         {
@@ -252,10 +253,10 @@ export function AdminShell({
       }
     >
       <AdminSidebar userName={userName} />
-      <SidebarInset className="min-w-0">
+      <SidebarInset className="min-h-0 min-w-0">
         <AdminHeader />
-        <div className="@container/main flex flex-1 flex-col">
-          <div className="flex flex-1 flex-col gap-4 p-4 lg:p-6">{children}</div>
+        <div className="@container/main flex min-h-0 flex-1 flex-col">
+          <div className="flex min-h-0 flex-1 flex-col gap-4 p-4">{children}</div>
         </div>
       </SidebarInset>
     </SidebarProvider>
