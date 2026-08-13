@@ -19,14 +19,10 @@ import {
 import { Input } from "@/components/ui/input"
 import { ROUTES } from "@/constants/routes"
 import { GoogleIcon } from "@/features/auth/components/google-icon"
-import {
-  AUTH_ENDPOINTS,
-  AUTH_ERROR_CODES,
-  AUTH_ERROR_MESSAGES,
-} from "@/features/auth/constants/auth.constants"
+import { AUTH_ENDPOINTS } from "@/features/auth/constants/auth.constants"
 import { registerSchema, type RegisterInput } from "@/features/auth/schemas/register.schema"
 import { register } from "@/features/auth/services/auth.service"
-import { HttpRequestError } from "@/lib/http/client"
+import { getAuthFormError } from "@/features/auth/utils/auth-error"
 
 const defaultValues: RegisterInput = {
   name: "",
@@ -50,19 +46,8 @@ export function RegisterForm() {
       await register(values)
       router.replace(`${ROUTES.login}?registered=1`)
     } catch (error) {
-      if (
-        error instanceof HttpRequestError &&
-        error.code === AUTH_ERROR_CODES.emailAlreadyRegistered
-      ) {
-        form.setError("email", { message: AUTH_ERROR_MESSAGES.emailAlreadyRegistered })
-        return
-      }
-
-      const message =
-        error instanceof HttpRequestError && error.code === AUTH_ERROR_CODES.invalidRequest
-          ? AUTH_ERROR_MESSAGES.register
-          : AUTH_ERROR_MESSAGES.unavailable
-      form.setError("root", { message })
+      const { field = "root", message } = getAuthFormError(error, "register")
+      form.setError(field, { message })
     }
   }
 

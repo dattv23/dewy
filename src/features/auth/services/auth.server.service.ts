@@ -25,6 +25,18 @@ type RegisterAccountInput = LoginCredentials & {
 
 export type LoginSession = z.infer<typeof loginResponseSchema>["data"]
 
+function normalizeAuthError(
+  error: unknown,
+  passthroughStatuses: readonly number[],
+  statusOverrides: Partial<Record<number, number>> = {},
+): never {
+  if (error instanceof ServerHttpError && passthroughStatuses.includes(error.status)) {
+    throw new ServerHttpError(statusOverrides[error.status] ?? error.status, error.code)
+  }
+
+  throw new ServerHttpError(502, "AUTHENTICATION_UNAVAILABLE")
+}
+
 export async function authenticate(credentials: LoginCredentials): Promise<LoginSession> {
   let response: Response
 
@@ -35,13 +47,7 @@ export async function authenticate(credentials: LoginCredentials): Promise<Login
       { fallbackErrorCode: "AUTHENTICATION_UNAVAILABLE" },
     )
   } catch (error) {
-    if (error instanceof ServerHttpError) {
-      if (error.status === 400 || error.status === 401) {
-        throw new ServerHttpError(401, error.code)
-      }
-      if (error.status === 504) throw error
-    }
-    throw new ServerHttpError(502, "AUTHENTICATION_UNAVAILABLE")
+    normalizeAuthError(error, [400, 401, 504], { 400: 401 })
   }
 
   const result = loginResponseSchema.safeParse(await response.json().catch(() => null))
@@ -61,9 +67,6 @@ export async function registerAccount(input: RegisterAccountInput): Promise<void
       { fallbackErrorCode: "AUTHENTICATION_UNAVAILABLE" },
     )
   } catch (error) {
-    if (error instanceof ServerHttpError) {
-      if (error.status === 400 || error.status === 409 || error.status === 504) throw error
-    }
-    throw new ServerHttpError(502, "AUTHENTICATION_UNAVAILABLE")
+    normalizeAuthError(error, [400, 409, 504])
   }
 }
