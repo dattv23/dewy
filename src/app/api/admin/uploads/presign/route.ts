@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createPresignedUpload } from "@/features/admin/services/category.server.service"
+import { createPresignedUpload } from "@/features/admin/services/upload.server.service"
 import { getAccessToken } from "@/lib/auth/session"
 import { apiErrorResponse, unauthenticatedApiResponse } from "@/lib/http/api-route"
 
