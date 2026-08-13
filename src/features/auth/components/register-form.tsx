@@ -25,7 +25,8 @@ import {
   AUTH_ERROR_MESSAGES,
 } from "@/features/auth/constants/auth.constants"
 import { registerSchema, type RegisterInput } from "@/features/auth/schemas/register.schema"
-import { AuthRequestError, register } from "@/features/auth/services/auth.service"
+import { register } from "@/features/auth/services/auth.service"
+import { HttpRequestError } from "@/lib/http/client"
 
 const defaultValues: RegisterInput = {
   name: "",
@@ -50,15 +51,15 @@ export function RegisterForm() {
       router.replace(`${ROUTES.login}?registered=1`)
     } catch (error) {
       if (
-        error instanceof AuthRequestError &&
-        error.message === AUTH_ERROR_CODES.emailAlreadyRegistered
+        error instanceof HttpRequestError &&
+        error.code === AUTH_ERROR_CODES.emailAlreadyRegistered
       ) {
         form.setError("email", { message: AUTH_ERROR_MESSAGES.emailAlreadyRegistered })
         return
       }
 
       const message =
-        error instanceof AuthRequestError && error.message === AUTH_ERROR_CODES.invalidRequest
+        error instanceof HttpRequestError && error.code === AUTH_ERROR_CODES.invalidRequest
           ? AUTH_ERROR_MESSAGES.register
           : AUTH_ERROR_MESSAGES.unavailable
       form.setError("root", { message })

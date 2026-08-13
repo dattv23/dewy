@@ -6,6 +6,7 @@ import { loginSchema } from "@/features/auth/schemas/login.schema"
 import { authenticate, AuthUpstreamError } from "@/features/auth/services/auth.server.service"
 import { getPostLoginRoute } from "@/features/auth/utils/auth-navigation"
 import { getSessionFromToken, setAccessTokenCookie } from "@/lib/auth/session"
+import { apiStatusErrorResponse } from "@/lib/http/api-route"
 
 const loginRequestSchema = loginSchema.extend({
   next: z.string().max(2_048).optional(),
@@ -15,7 +16,10 @@ export async function POST(request: Request) {
   const input = loginRequestSchema.safeParse(await request.json().catch(() => null))
 
   if (!input.success) {
-    return NextResponse.json({ code: AUTH_ERROR_CODES.invalidRequest }, { status: 400 })
+    return apiStatusErrorResponse(400, AUTH_ERROR_CODES.invalidRequest, {
+      includeSuccess: false,
+      clearAuthOnUnauthorized: false,
+    })
   }
 
   try {
@@ -26,7 +30,10 @@ export async function POST(request: Request) {
 
     const user = getSessionFromToken(session.accessToken)
     if (!user) {
-      return NextResponse.json({ code: AUTH_ERROR_CODES.serviceUnavailable }, { status: 502 })
+      return apiStatusErrorResponse(502, AUTH_ERROR_CODES.serviceUnavailable, {
+        includeSuccess: false,
+        clearAuthOnUnauthorized: false,
+      })
     }
 
     const response = NextResponse.json({
@@ -42,10 +49,16 @@ export async function POST(request: Request) {
     return response
   } catch (error) {
     if (error instanceof AuthUpstreamError && error.status === 401) {
-      return NextResponse.json({ code: AUTH_ERROR_CODES.invalidCredentials }, { status: 401 })
+      return apiStatusErrorResponse(401, AUTH_ERROR_CODES.invalidCredentials, {
+        includeSuccess: false,
+        clearAuthOnUnauthorized: false,
+      })
     }
 
     const status = error instanceof AuthUpstreamError ? error.status : 502
-    return NextResponse.json({ code: AUTH_ERROR_CODES.serviceUnavailable }, { status })
+    return apiStatusErrorResponse(status, AUTH_ERROR_CODES.serviceUnavailable, {
+      includeSuccess: false,
+      clearAuthOnUnauthorized: false,
+    })
   }
 }

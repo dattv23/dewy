@@ -25,7 +25,8 @@ import {
   AUTH_ERROR_MESSAGES,
 } from "@/features/auth/constants/auth.constants"
 import { loginSchema, type LoginInput } from "@/features/auth/schemas/login.schema"
-import { AuthRequestError, login } from "@/features/auth/services/auth.service"
+import { login } from "@/features/auth/services/auth.service"
+import { HttpRequestError } from "@/lib/http/client"
 
 const defaultValues: LoginInput = {
   email: "",
@@ -47,7 +48,7 @@ export function LoginForm() {
       router.refresh()
     } catch (error) {
       const message =
-        error instanceof AuthRequestError && error.message === AUTH_ERROR_CODES.invalidCredentials
+        error instanceof HttpRequestError && error.code === AUTH_ERROR_CODES.invalidCredentials
           ? AUTH_ERROR_MESSAGES.login
           : AUTH_ERROR_MESSAGES.unavailable
 

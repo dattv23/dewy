@@ -1,9 +1,9 @@
 import "server-only"
 import { z } from "zod"
-import { serverEnv } from "@/config/env"
+import { ServerHttpError, serverHttpRequest } from "@/lib/http/server"
 import type { CustomerProfile } from "@/types/customer"
 
-const CUSTOMER_TIMEOUT_MS = 10_000
+export { ServerHttpError as CustomerUpstreamError } from "@/lib/http/server"
 
 const customerProfileResponseSchema = z.object({
   success: z.literal(true),
@@ -30,36 +30,30 @@ const customerProfileResponseSchema = z.object({
   }),
 })
 
-export class CustomerUpstreamError extends Error {
-  constructor(readonly status: 401 | 404 | 502 | 504) {
-    super("Customer upstream request failed")
-    this.name = "CustomerUpstreamError"
-  }
-}
-
 export async function getCurrentCustomer(accessToken: string): Promise<CustomerProfile> {
   let response: Response
 
   try {
-    response = await fetch(`${serverEnv.BACKEND_URL}/api/v1/customers/me`, {
-      headers: {
-        Accept: "application/json",
-        Authorization: `Bearer ${accessToken}`,
+    response = await serverHttpRequest(
+      "/api/v1/customers/me",
+      {},
+      {
+        accessToken,
+        fallbackErrorCode: "PROFILE_UNAVAILABLE",
       },
-      cache: "no-store",
-      signal: AbortSignal.timeout(CUSTOMER_TIMEOUT_MS),
-    })
+    )
   } catch (error) {
-    const status = error instanceof DOMException && error.name === "TimeoutError" ? 504 : 502
-    throw new CustomerUpstreamError(status)
+    if (error instanceof ServerHttpError) {
+      if (error.status === 401 || error.status === 403) {
+        throw new ServerHttpError(401, error.code)
+      }
+      if (error.status === 404 || error.status === 504) throw error
+    }
+    throw new ServerHttpError(502, "PROFILE_UNAVAILABLE")
   }
 
-  if (response.status === 401 || response.status === 403) throw new CustomerUpstreamError(401)
-  if (response.status === 404) throw new CustomerUpstreamError(404)
-  if (!response.ok) throw new CustomerUpstreamError(502)
-
   const result = customerProfileResponseSchema.safeParse(await response.json().catch(() => null))
-  if (!result.success) throw new CustomerUpstreamError(502)
+  if (!result.success) throw new ServerHttpError(502, "INVALID_UPSTREAM_RESPONSE")
 
   return result.data.data
 }
