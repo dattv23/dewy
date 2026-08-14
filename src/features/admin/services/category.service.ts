@@ -1,34 +1,13 @@
 import {
   categoryListResponseSchema,
   categoryResponseSchema,
-  presignedUploadResponseSchema,
   type CategoryFormValues,
 } from "@/features/admin/schemas/category.schema"
-import type { Category, CategoryPage, PresignedUpload } from "@/types/category"
+import type { Category, CategoryPage } from "@/types/category"
+import { httpRequest } from "@/lib/http/client"
 
-export class CategoryRequestError extends Error {
-  constructor(
-    readonly status: number,
-    readonly code: string,
-  ) {
-    super(code)
-    this.name = "CategoryRequestError"
-  }
-}
-
-async function request(path: string, init?: RequestInit) {
-  const response = await fetch(path, {
-    ...init,
-    credentials: "same-origin",
-    cache: "no-store",
-    headers: { ...(init?.body ? { "Content-Type": "application/json" } : {}), ...init?.headers },
-  })
-
-  if (!response.ok) {
-    const body = (await response.json().catch(() => null)) as { code?: string } | null
-    throw new CategoryRequestError(response.status, body?.code ?? "CATEGORY_UNAVAILABLE")
-  }
-  return response
+function request(path: string, init?: RequestInit) {
+  return httpRequest(path, init, { fallbackErrorCode: "CATEGORY_UNAVAILABLE" })
 }
 
 export async function getCategories(
@@ -59,31 +38,4 @@ export async function setCategoryStatus(id: number, active: boolean): Promise<Ca
 
 export async function removeCategory(id: number): Promise<void> {
   await request(`/api/admin/categories/${id}`, { method: "DELETE" })
-}
-
-export async function getPresignedUpload(file: File): Promise<PresignedUpload> {
-  const response = await request("/api/admin/uploads/presign", {
-    method: "POST",
-    body: JSON.stringify({
-      fileName: file.name,
-      contentType: file.type,
-      fileSize: file.size,
-      category: "CMS",
-      visibility: "PUBLIC",
-    }),
-  })
-  return presignedUploadResponseSchema.parse(await response.json()).data
-}
-
-export async function uploadCategoryImage(file: File): Promise<string> {
-  const presigned = await getPresignedUpload(file)
-  const response = await fetch(presigned.uploadUrl, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "image/jpeg",
-    },
-    body: file,
-  })
-  if (!response.ok) throw new CategoryRequestError(response.status, "UPLOAD_FAILED")
-  return presigned.fileUrl
 }

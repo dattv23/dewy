@@ -27,15 +27,3 @@ export type CategoryInput = {
   imageUrl: string | null
   sortOrder: number | null
 }
-
-export type PresignedUpload = {
-  key: string
-  bucket: string
-  method: string
-  uploadUrl: string
-  requiredHeaders: Record<string, string>
-  expiresAt: string
-  fileUrl: string
-  category: "CMS"
-  visibility: "PUBLIC"
-}

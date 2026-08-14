@@ -3,16 +3,15 @@ import { OrdersChart } from "@/features/admin/components/dashboard/orders-chart"
 import { PendingAlerts } from "@/features/admin/components/dashboard/pending-alerts"
 import { RecentActivity } from "@/features/admin/components/dashboard/recent-activity"
 import { SourcingChart } from "@/features/admin/components/dashboard/sourcing-chart"
+import { AdminPage, AdminPageHeader } from "@/features/admin/components/admin-page"
 
 export function AdminDashboardOverview() {
   return (
-    <div className="flex min-w-0 flex-col gap-6">
-      <div className="flex flex-col gap-1.5">
-        <h1 className="text-2xl font-semibold tracking-tight text-balance">Dashboard vận hành</h1>
-        <p className="text-muted-foreground max-w-[70ch] text-base text-pretty sm:text-sm">
-          Tổng quan đơn hàng, tồn kho, sourcing và các tác vụ cần xử lý.
-        </p>
-      </div>
+    <AdminPage>
+      <AdminPageHeader
+        title="Dashboard vận hành"
+        description="Tổng quan đơn hàng, tồn kho, sourcing và các tác vụ cần xử lý."
+      />
       <DashboardKpiSection />
       <div className="grid gap-4 xl:grid-cols-2">
         <OrdersChart />
@@ -22,6 +21,6 @@ export function AdminDashboardOverview() {
         <RecentActivity />
         <PendingAlerts />
       </div>
-    </div>
+    </AdminPage>
   )
 }

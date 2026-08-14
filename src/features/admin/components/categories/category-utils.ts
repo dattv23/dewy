@@ -1,7 +1,7 @@
-import { CategoryRequestError } from "@/features/admin/services/category.service"
+import { HttpRequestError } from "@/lib/http/client"
 
 export function getCategoryErrorMessage(error: unknown, action: string) {
-  if (error instanceof CategoryRequestError) {
+  if (error instanceof HttpRequestError) {
     if (error.status === 401 || error.status === 403)
       return "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại."
     if (error.status === 409) return `${action} thất bại vì slug đã được sử dụng.`
