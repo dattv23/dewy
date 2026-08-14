@@ -27,13 +27,13 @@ const ordersChartConfig = {
 
 export function OrdersChart() {
   return (
-    <Card>
-      <CardHeader>
+    <Card className="xl:gap-3 xl:py-4">
+      <CardHeader className="xl:gap-1 xl:px-4">
         <CardTitle>Đơn hàng theo ngày</CardTitle>
         <CardDescription>Khối lượng đơn hàng trong 7 ngày gần nhất</CardDescription>
       </CardHeader>
-      <CardContent>
-        <ChartContainer config={ordersChartConfig} className="h-64 w-full">
+      <CardContent className="xl:px-4">
+        <ChartContainer config={ordersChartConfig} className="h-64 w-full xl:h-44">
           <AreaChart data={dashboardSeries.orders} accessibilityLayer>
             <defs>
               <linearGradient id="orders-fill" x1="0" y1="0" x2="0" y2="1">
@@ -55,7 +55,7 @@ export function OrdersChart() {
           </AreaChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="text-muted-foreground gap-2 text-sm">
+      <CardFooter className="text-muted-foreground gap-2 text-sm xl:px-4">
         <ShoppingCart />
         Trung bình 75 đơn mỗi ngày
       </CardFooter>

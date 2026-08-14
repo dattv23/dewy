@@ -1,16 +1,18 @@
 import { NextResponse } from "next/server"
+import { getCurrentCustomer } from "@/features/account/services/customer.server.service"
+import { getAccessToken } from "@/lib/auth/session"
 import {
-  CustomerUpstreamError,
-  getCurrentCustomer,
-} from "@/features/account/services/customer.server.service"
-import { clearAccessTokenCookie, getAccessToken } from "@/lib/auth/session"
+  apiStatusErrorResponse,
+  getApiErrorDetails,
+  unauthenticatedApiResponse,
+} from "@/lib/http/api-route"
 import type { CustomerProfileResponse } from "@/types/customer"
 
 export async function GET() {
   const accessToken = await getAccessToken()
 
   if (!accessToken) {
-    return NextResponse.json({ code: "UNAUTHENTICATED" }, { status: 401 })
+    return unauthenticatedApiResponse(false)
   }
 
   try {
@@ -20,13 +22,11 @@ export async function GET() {
       { headers: { "Cache-Control": "no-store" } },
     )
   } catch (error) {
-    const status = error instanceof CustomerUpstreamError ? error.status : 502
-    const response = NextResponse.json(
-      { code: status === 401 ? "UNAUTHENTICATED" : "PROFILE_UNAVAILABLE" },
-      { status },
+    const { status } = getApiErrorDetails(error, { fallbackCode: "PROFILE_UNAVAILABLE" })
+    return apiStatusErrorResponse(
+      status,
+      status === 401 ? "UNAUTHENTICATED" : "PROFILE_UNAVAILABLE",
+      { includeSuccess: false },
     )
-    response.headers.set("Cache-Control", "no-store")
-    if (status === 401) clearAccessTokenCookie(response)
-    return response
   }
 }

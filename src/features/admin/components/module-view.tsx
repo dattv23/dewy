@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
+import { AdminPage, AdminPageHeader, AdminToolbar } from "@/features/admin/components/admin-page"
 
 function StatusBadge({ label }: { label: string }) {
   if (
@@ -27,7 +28,7 @@ function StatusBadge({ label }: { label: string }) {
       "Sẵn sàng tải",
     ].includes(label)
   ) {
-    return <Badge className="bg-[#dcfce7] text-[#166534]">{label}</Badge>
+    return <Badge variant="secondary">{label}</Badge>
   }
 
   if (["Hủy", "Thất bại", "Bị chặn", "Từ chối", "Tạm khóa"].includes(label)) {
@@ -64,7 +65,7 @@ function FormShowcase({ moduleKey }: { moduleKey: string }) {
 
   if (moduleKey === "orders") {
     return (
-      <div className="space-y-2 text-sm">
+      <div className="flex flex-col gap-2 text-sm">
         <p>
           Luồng xử lý: Tiếp nhận đơn → Xác nhận thanh toán → Đóng gói → Bàn giao vận chuyển → Hoàn
           tất
@@ -111,13 +112,19 @@ function FormShowcase({ moduleKey }: { moduleKey: string }) {
 
 export function AdminModuleView({ module }: { module: AdminModuleConfig }) {
   return (
-    <div className="space-y-4">
-      <Card className="gap-4 py-4">
-        <CardHeader className="px-4">
-          <CardTitle>{module.title}</CardTitle>
-          <CardDescription>{module.purpose}</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-3 px-4">
+    <AdminPage>
+      <AdminPageHeader
+        title={module.title}
+        description={module.purpose}
+        actions={
+          <Button>
+            <Plus data-icon="inline-start" /> Tạo mới
+          </Button>
+        }
+      />
+
+      <AdminToolbar>
+        <div className="flex flex-col gap-3">
           <div className="bg-muted/30 grid gap-3 rounded-lg border p-3 text-sm md:grid-cols-3">
             <div>
               <p className="text-muted-foreground text-xs uppercase">Màn hình chính</p>
@@ -133,29 +140,26 @@ export function AdminModuleView({ module }: { module: AdminModuleConfig }) {
             </div>
           </div>
 
-          <div className="grid gap-2 sm:grid-cols-[1fr_auto_auto]">
+          <div className="grid gap-2 sm:grid-cols-[1fr_auto]">
             <div className="relative">
-              <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
+              <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2" />
               <Input placeholder="Tìm kiếm..." className="pl-9" />
             </div>
             <Button variant="outline">
-              <Filter className="h-4 w-4" /> Bộ lọc
+              <Filter data-icon="inline-start" /> Bộ lọc
             </Button>
-            <div className="flex gap-2">
-              <Button variant="outline">
-                <Download className="h-4 w-4" /> Export
-              </Button>
-              <Button>
-                <Plus className="h-4 w-4" /> Tạo mới
-              </Button>
-            </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </AdminToolbar>
 
       <Card className="py-4">
         <CardHeader className="px-4">
-          <CardTitle className="text-base">Bảng dữ liệu chính</CardTitle>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <CardTitle className="text-base">Bảng dữ liệu chính</CardTitle>
+            <Button variant="outline">
+              <Download data-icon="inline-start" /> Xuất dữ liệu
+            </Button>
+          </div>
         </CardHeader>
         <CardContent className="px-4">
           <Table>
@@ -217,7 +221,7 @@ export function AdminModuleView({ module }: { module: AdminModuleConfig }) {
 
         <TabsContent value="status">
           <Card className="py-4">
-            <CardContent className="space-y-2 px-4">
+            <CardContent className="flex flex-col gap-2 px-4">
               <p className="text-sm font-semibold">Luồng trạng thái chuẩn</p>
               <div className="flex flex-wrap items-center gap-2 text-sm">
                 {module.statusFlow.map((status, index) => (
@@ -249,7 +253,7 @@ export function AdminModuleView({ module }: { module: AdminModuleConfig }) {
 
         <TabsContent value="validation">
           <Card className="py-4">
-            <CardContent className="text-muted-foreground space-y-1 px-4 text-sm">
+            <CardContent className="text-muted-foreground flex flex-col gap-1 px-4 text-sm">
               {module.validations.map((message) => (
                 <p key={message}>• {message}</p>
               ))}
@@ -257,6 +261,6 @@ export function AdminModuleView({ module }: { module: AdminModuleConfig }) {
           </Card>
         </TabsContent>
       </Tabs>
-    </div>
+    </AdminPage>
   )
 }

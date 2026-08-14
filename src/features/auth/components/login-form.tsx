@@ -19,13 +19,10 @@ import {
 import { Input } from "@/components/ui/input"
 import { ROUTES } from "@/constants/routes"
 import { GoogleIcon } from "@/features/auth/components/google-icon"
-import {
-  AUTH_ENDPOINTS,
-  AUTH_ERROR_CODES,
-  AUTH_ERROR_MESSAGES,
-} from "@/features/auth/constants/auth.constants"
+import { AUTH_ENDPOINTS, AUTH_ERROR_MESSAGES } from "@/features/auth/constants/auth.constants"
 import { loginSchema, type LoginInput } from "@/features/auth/schemas/login.schema"
-import { AuthRequestError, login } from "@/features/auth/services/auth.service"
+import { login } from "@/features/auth/services/auth.service"
+import { getAuthFormError } from "@/features/auth/utils/auth-error"
 
 const defaultValues: LoginInput = {
   email: "",
@@ -46,12 +43,7 @@ export function LoginForm() {
       router.replace(result.redirectTo)
       router.refresh()
     } catch (error) {
-      const message =
-        error instanceof AuthRequestError && error.message === AUTH_ERROR_CODES.invalidCredentials
-          ? AUTH_ERROR_MESSAGES.login
-          : AUTH_ERROR_MESSAGES.unavailable
-
-      form.setError("root", { message })
+      form.setError("root", getAuthFormError(error, "login"))
     }
   }
 

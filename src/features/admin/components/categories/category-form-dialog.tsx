@@ -11,11 +11,13 @@ import {
   type CategoryFormValues,
 } from "@/features/admin/schemas/category.schema"
 import {
-  CategoryRequestError,
-  saveCategory,
-  setCategoryStatus,
-  uploadCategoryImage,
-} from "@/features/admin/services/category.service"
+  useCategoryStatusMutation,
+  useSaveCategoryMutation,
+} from "@/features/admin/hooks/use-admin-categories-query"
+import { useImageUpload } from "@/features/admin/hooks/use-image-upload"
+import { InvalidImageUploadError } from "@/features/admin/services/upload.service"
+import { HttpRequestError } from "@/lib/http/client"
+import { slugify } from "@/lib/slug"
 import type { Category } from "@/types/category"
 import { Button } from "@/components/ui/button"
 import {
@@ -52,35 +54,22 @@ const EMPTY_FORM: CategoryFormValues = {
   sortOrder: null,
 }
 
-function slugify(value: string) {
-  return value
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/đ/g, "d")
-    .replace(/Đ/g, "D")
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "")
-}
-
 export function CategoryFormDialog({
   open,
   category,
   categories,
   onOpenChange,
-  onSaved,
 }: {
   open: boolean
   category: Category | null
   categories: Category[]
   onOpenChange: (open: boolean) => void
-  onSaved: () => Promise<void>
 }) {
   const router = useRouter()
   const [active, setActive] = useState(category?.active ?? true)
   const [slugWasEdited, setSlugWasEdited] = useState(Boolean(category))
-  const [uploading, setUploading] = useState(false)
+  const saveMutation = useSaveCategoryMutation()
+  const statusMutation = useCategoryStatusMutation()
   const form = useForm<CategoryFormValues>({
     resolver: zodResolver(categoryInputSchema),
     defaultValues: category
@@ -96,34 +85,32 @@ export function CategoryFormDialog({
   })
   const imageUrl = useWatch({ control: form.control, name: "imageUrl" })
   const parentId = useWatch({ control: form.control, name: "parentId" })
-
-  async function handleImage(file?: File) {
-    if (!file) return
-    if (!file.type.startsWith("image/")) {
-      form.setError("imageUrl", { message: "Vui lòng chọn một tệp hình ảnh." })
-      return
-    }
-    setUploading(true)
-    form.clearErrors("imageUrl")
-    try {
-      form.setValue("imageUrl", await uploadCategoryImage(file), { shouldDirty: true })
+  const { isUploading: uploading, upload: handleImage } = useImageUpload({
+    category: "CATEGORY",
+    onUploaded(fileUrl) {
+      form.setValue("imageUrl", fileUrl, { shouldDirty: true, shouldValidate: true })
       toast.success("Ảnh danh mục đã tải lên")
-    } catch (error) {
-      form.setError("imageUrl", { message: getCategoryErrorMessage(error, "Tải ảnh") })
-    } finally {
-      setUploading(false)
-    }
-  }
+    },
+    onError(error) {
+      form.setError("imageUrl", {
+        message:
+          error instanceof InvalidImageUploadError
+            ? error.message
+            : getCategoryErrorMessage(error, "Tải ảnh"),
+      })
+    },
+  })
 
   async function submit(values: CategoryFormValues) {
     try {
-      const saved = await saveCategory(values, category?.id)
-      if (saved.active !== active) await setCategoryStatus(saved.id, active)
+      const saved = await saveMutation.mutateAsync({ values, id: category?.id })
+      if (saved.active !== active) {
+        await statusMutation.mutateAsync({ id: saved.id, active })
+      }
       toast.success(category ? "Danh mục đã được cập nhật" : "Danh mục đã được tạo")
       onOpenChange(false)
-      await onSaved()
     } catch (error) {
-      if (error instanceof CategoryRequestError && (error.status === 401 || error.status === 403)) {
+      if (error instanceof HttpRequestError && (error.status === 401 || error.status === 403)) {
         router.replace(ROUTES.login)
       }
       form.setError("root", {

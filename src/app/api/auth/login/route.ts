@@ -3,7 +3,12 @@ import { z } from "zod"
 import { isProduction } from "@/config/env"
 import { AUTH_ERROR_CODES } from "@/features/auth/constants/auth.constants"
 import { loginSchema } from "@/features/auth/schemas/login.schema"
-import { authenticate, AuthUpstreamError } from "@/features/auth/services/auth.server.service"
+import { authenticate } from "@/features/auth/services/auth.server.service"
+import {
+  authApiErrorResponse,
+  authServiceUnavailableResponse,
+  invalidAuthRequestResponse,
+} from "@/features/auth/utils/auth-api-error"
 import { getPostLoginRoute } from "@/features/auth/utils/auth-navigation"
 import { getSessionFromToken, setAccessTokenCookie } from "@/lib/auth/session"
 
@@ -15,7 +20,7 @@ export async function POST(request: Request) {
   const input = loginRequestSchema.safeParse(await request.json().catch(() => null))
 
   if (!input.success) {
-    return NextResponse.json({ code: AUTH_ERROR_CODES.invalidRequest }, { status: 400 })
+    return invalidAuthRequestResponse()
   }
 
   try {
@@ -26,7 +31,7 @@ export async function POST(request: Request) {
 
     const user = getSessionFromToken(session.accessToken)
     if (!user) {
-      return NextResponse.json({ code: AUTH_ERROR_CODES.serviceUnavailable }, { status: 502 })
+      return authServiceUnavailableResponse()
     }
 
     const response = NextResponse.json({
@@ -41,11 +46,8 @@ export async function POST(request: Request) {
 
     return response
   } catch (error) {
-    if (error instanceof AuthUpstreamError && error.status === 401) {
-      return NextResponse.json({ code: AUTH_ERROR_CODES.invalidCredentials }, { status: 401 })
-    }
-
-    const status = error instanceof AuthUpstreamError ? error.status : 502
-    return NextResponse.json({ code: AUTH_ERROR_CODES.serviceUnavailable }, { status })
+    return authApiErrorResponse(error, {
+      401: AUTH_ERROR_CODES.invalidCredentials,
+    })
   }
 }

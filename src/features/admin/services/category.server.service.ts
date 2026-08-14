@@ -1,26 +1,14 @@
 import "server-only"
 import { z } from "zod"
-import { serverEnv } from "@/config/env"
 import {
   categoryInputSchema,
   categoryListResponseSchema,
   categoryResponseSchema,
   categoryStatusSchema,
-  presignedUploadRequestSchema,
-  presignedUploadResponseSchema,
 } from "@/features/admin/schemas/category.schema"
+import { ServerHttpError, serverHttpRequest } from "@/lib/http/server"
 
-const ADMIN_TIMEOUT_MS = 10_000
-
-export class AdminCategoryUpstreamError extends Error {
-  constructor(
-    readonly status: number,
-    readonly code = "CATEGORY_UNAVAILABLE",
-  ) {
-    super(code)
-    this.name = "AdminCategoryUpstreamError"
-  }
-}
+export { ServerHttpError as AdminCategoryUpstreamError } from "@/lib/http/server"
 
 async function requestBackend<T>(
   accessToken: string,
@@ -28,33 +16,14 @@ async function requestBackend<T>(
   schema: z.ZodType<T> | null,
   init?: RequestInit,
 ): Promise<T | null> {
-  let response: Response
-
-  try {
-    response = await fetch(`${serverEnv.BACKEND_URL}${path}`, {
-      ...init,
-      headers: {
-        Accept: "application/json",
-        Authorization: `Bearer ${accessToken}`,
-        ...(init?.body ? { "Content-Type": "application/json" } : {}),
-        ...init?.headers,
-      },
-      cache: "no-store",
-      signal: AbortSignal.timeout(ADMIN_TIMEOUT_MS),
-    })
-  } catch (error) {
-    const status = error instanceof DOMException && error.name === "TimeoutError" ? 504 : 502
-    throw new AdminCategoryUpstreamError(status)
-  }
-
-  if (!response.ok) {
-    const body = (await response.json().catch(() => null)) as { code?: string } | null
-    throw new AdminCategoryUpstreamError(response.status, body?.code)
-  }
+  const response = await serverHttpRequest(path, init, {
+    accessToken,
+    fallbackErrorCode: "CATEGORY_UNAVAILABLE",
+  })
 
   if (!schema) return null
   const parsed = schema.safeParse(await response.json().catch(() => null))
-  if (!parsed.success) throw new AdminCategoryUpstreamError(502, "INVALID_UPSTREAM_RESPONSE")
+  if (!parsed.success) throw new ServerHttpError(502, "INVALID_UPSTREAM_RESPONSE")
   return parsed.data
 }
 
@@ -110,17 +79,6 @@ export async function updateCategoryStatus(accessToken: string, id: number, inpu
     `/api/v1/admin/categories/${id}/status`,
     categoryResponseSchema,
     { method: "PATCH", body: JSON.stringify(payload) },
-  )
-  return result!.data
-}
-
-export async function createPresignedUpload(accessToken: string, input: unknown) {
-  const payload = presignedUploadRequestSchema.parse(input)
-  const result = await requestBackend(
-    accessToken,
-    "/api/v1/files/uploads/presign",
-    presignedUploadResponseSchema,
-    { method: "POST", body: JSON.stringify(payload) },
   )
   return result!.data
 }

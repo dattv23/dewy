@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { ROUTES } from "@/constants/routes"
+import { AdminPage } from "@/features/admin/components/admin-page"
 import { CategoryDeleteDialog } from "@/features/admin/components/categories/category-delete-dialog"
 import { CategoryFormDialog } from "@/features/admin/components/categories/category-form-dialog"
 import {
@@ -13,11 +14,11 @@ import {
 import { CategoryPageHeader } from "@/features/admin/components/categories/category-page-header"
 import { getCategoryErrorMessage } from "@/features/admin/components/categories/category-utils"
 import {
-  CategoryRequestError,
-  getCategories,
-  removeCategory,
-  setCategoryStatus,
-} from "@/features/admin/services/category.service"
+  useAdminCategoriesQuery,
+  useCategoryStatusMutation,
+  useDeleteCategoryMutation,
+} from "@/features/admin/hooks/use-admin-categories-query"
+import { HttpRequestError } from "@/lib/http/client"
 import type { Category } from "@/types/category"
 
 const INITIAL_FILTERS: CategoryFilters = {
@@ -31,62 +32,29 @@ const PAGE_SIZE = 20
 
 export function AdminCategoryView() {
   const router = useRouter()
-  const [categories, setCategories] = useState<Category[]>([])
   const [page, setPage] = useState(1)
-  const [totalItems, setTotalItems] = useState(0)
-  const [totalPages, setTotalPages] = useState(0)
   const [filters, setFilters] = useState(INITIAL_FILTERS)
-  const [loading, setLoading] = useState(true)
-  const [refreshing, setRefreshing] = useState(false)
-  const [loadError, setLoadError] = useState<string | null>(null)
   const [editing, setEditing] = useState<Category | null>(null)
   const [formOpen, setFormOpen] = useState(false)
   const [deleting, setDeleting] = useState<Category | null>(null)
-  const [busyId, setBusyId] = useState<number | null>(null)
+  const categoriesQuery = useAdminCategoriesQuery({ page, size: PAGE_SIZE })
+  const statusMutation = useCategoryStatusMutation()
+  const deleteMutation = useDeleteCategoryMutation()
+  const categories = categoriesQuery.items
+  const busyId = statusMutation.variables?.id ?? deleteMutation.variables ?? null
 
   const handleSessionError = useCallback(
     (error: unknown) => {
-      if (error instanceof CategoryRequestError && (error.status === 401 || error.status === 403)) {
+      if (error instanceof HttpRequestError && (error.status === 401 || error.status === 403)) {
         router.replace(ROUTES.login)
       }
     },
     [router],
   )
 
-  const load = useCallback(async () => {
-    setRefreshing(true)
-    setLoadError(null)
-    try {
-      const result = await getCategories(page, PAGE_SIZE)
-      setCategories(result.items)
-      setTotalItems(result.pagination.totalItems)
-      setTotalPages(result.pagination.totalPages)
-    } catch (error) {
-      setLoadError(getCategoryErrorMessage(error, "Tải danh mục"))
-      handleSessionError(error)
-    } finally {
-      setRefreshing(false)
-    }
-  }, [handleSessionError, page])
-
   useEffect(() => {
-    const controller = new AbortController()
-    getCategories(page, PAGE_SIZE, controller.signal)
-      .then((result) => {
-        setCategories(result.items)
-        setTotalItems(result.pagination.totalItems)
-        setTotalPages(result.pagination.totalPages)
-      })
-      .catch((error: unknown) => {
-        if (error instanceof DOMException && error.name === "AbortError") return
-        setLoadError(getCategoryErrorMessage(error, "Tải danh mục"))
-        handleSessionError(error)
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setLoading(false)
-      })
-    return () => controller.abort()
-  }, [handleSessionError, page])
+    if (categoriesQuery.error) handleSessionError(categoriesQuery.error)
+  }, [categoriesQuery.error, handleSessionError])
 
   const visibleCategories = useMemo(() => {
     const normalized = filters.query.trim().toLocaleLowerCase("vi")
@@ -124,52 +92,55 @@ export function AdminCategoryView() {
   }
 
   async function toggleStatus(category: Category, active: boolean) {
-    setBusyId(category.id)
     try {
-      const updated = await setCategoryStatus(category.id, active)
-      setCategories((current) => current.map((item) => (item.id === updated.id ? updated : item)))
+      await statusMutation.mutateAsync({ id: category.id, active })
       toast.success(active ? "Danh mục đã được hiển thị" : "Danh mục đã được ẩn")
     } catch (error) {
       toast.error(getCategoryErrorMessage(error, "Cập nhật trạng thái"))
       handleSessionError(error)
     } finally {
-      setBusyId(null)
+      statusMutation.reset()
     }
   }
 
   async function confirmDelete() {
     if (!deleting) return
-    setBusyId(deleting.id)
     try {
-      await removeCategory(deleting.id)
+      await deleteMutation.mutateAsync(deleting.id)
       toast.success("Danh mục đã được xóa")
       setDeleting(null)
       if (categories.length === 1 && page > 1) setPage((current) => current - 1)
-      else await load()
     } catch (error) {
       toast.error(getCategoryErrorMessage(error, "Xóa danh mục"))
       handleSessionError(error)
     } finally {
-      setBusyId(null)
+      deleteMutation.reset()
     }
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <CategoryPageHeader onCreate={openCreate} />
+    <AdminPage>
+      <CategoryPageHeader
+        categories={categories}
+        filters={filters}
+        onFiltersChange={setFilters}
+        onCreate={openCreate}
+      />
       <CategoryListCard
         categories={categories}
         visibleCategories={visibleCategories}
-        filters={filters}
-        loading={loading}
-        refreshing={refreshing}
-        loadError={loadError}
+        loading={categoriesQuery.loading}
+        refreshing={categoriesQuery.refreshing}
+        loadError={
+          categoriesQuery.error
+            ? getCategoryErrorMessage(categoriesQuery.error, "Tải danh mục")
+            : null
+        }
         busyId={busyId}
         page={page}
-        totalItems={totalItems}
-        totalPages={totalPages}
-        onFiltersChange={setFilters}
-        onReload={() => void load()}
+        totalItems={categoriesQuery.totalItems}
+        totalPages={categoriesQuery.totalPages}
+        onReload={() => void categoriesQuery.reload()}
         onCreate={openCreate}
         onEdit={openEdit}
         onDelete={setDeleting}
@@ -183,7 +154,6 @@ export function AdminCategoryView() {
           category={editing}
           categories={categories}
           onOpenChange={setFormOpen}
-          onSaved={load}
         />
       ) : null}
 
@@ -193,6 +163,6 @@ export function AdminCategoryView() {
         onOpenChange={(open) => !open && setDeleting(null)}
         onConfirm={() => void confirmDelete()}
       />
-    </div>
+    </AdminPage>
   )
 }

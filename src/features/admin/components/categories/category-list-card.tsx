@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 import { CategoryEmptyState } from "./category-empty-state"
-import { CategoryFilterBar, type CategoryFilters } from "./category-filter-bar"
 import { CategoryPagination } from "./category-pagination"
 import { CategoryTable } from "./category-table"
 import { CategoryTableSkeleton } from "./category-table-skeleton"
@@ -21,7 +20,6 @@ export type { CategoryFilters } from "./category-filter-bar"
 type CategoryListCardProps = {
   categories: Category[]
   visibleCategories: Category[]
-  filters: CategoryFilters
   loading: boolean
   refreshing: boolean
   loadError: string | null
@@ -29,7 +27,6 @@ type CategoryListCardProps = {
   page: number
   totalItems: number
   totalPages: number
-  onFiltersChange: (filters: CategoryFilters) => void
   onReload: () => void
   onCreate: () => void
   onEdit: (category: Category) => void
@@ -41,7 +38,6 @@ type CategoryListCardProps = {
 export function CategoryListCard({
   categories,
   visibleCategories,
-  filters,
   loading,
   refreshing,
   loadError,
@@ -49,7 +45,6 @@ export function CategoryListCard({
   page,
   totalItems,
   totalPages,
-  onFiltersChange,
   onReload,
   onCreate,
   onEdit,
@@ -58,12 +53,14 @@ export function CategoryListCard({
   onPageChange,
 }: CategoryListCardProps) {
   return (
-    <Card className="gap-0 py-0">
-      <CardHeader className="gap-4 border-b p-4">
+    <Card className="min-h-0 flex-1 gap-0 py-0">
+      <CardHeader className="border-b p-4 sm:px-5">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <CardTitle className="text-base">Danh sách danh mục</CardTitle>
-            <CardDescription>{totalItems} danh mục trong hệ thống.</CardDescription>
+            <CardTitle className="text-base">Bảng dữ liệu danh mục</CardTitle>
+            <CardDescription className="text-base/7 sm:text-sm/6">
+              {totalItems} danh mục trong hệ thống.
+            </CardDescription>
           </div>
           <Button
             type="button"
@@ -76,9 +73,8 @@ export function CategoryListCard({
             <RefreshCw className={cn(refreshing && "animate-spin")} />
           </Button>
         </div>
-        <CategoryFilterBar categories={categories} filters={filters} onChange={onFiltersChange} />
       </CardHeader>
-      <CardContent className="p-0">
+      <CardContent className="min-h-0 flex-1 overflow-auto p-0">
         {loading ? (
           <CategoryTableSkeleton />
         ) : loadError ? (
@@ -104,16 +100,14 @@ export function CategoryListCard({
           />
         )}
       </CardContent>
-      {!loading && !loadError && totalItems > 0 ? (
-        <CardFooter className="border-t p-4">
-          <CategoryPagination
-            page={page}
-            totalPages={totalPages}
-            disabled={refreshing}
-            onPageChange={onPageChange}
-          />
-        </CardFooter>
-      ) : null}
+      <CardFooter className="border-t p-4 sm:px-5">
+        <CategoryPagination
+          page={page}
+          totalPages={totalPages}
+          disabled={loading || refreshing || Boolean(loadError)}
+          onPageChange={onPageChange}
+        />
+      </CardFooter>
     </Card>
   )
 }

@@ -24,12 +24,17 @@ export function CategoryPagination({
   disabled: boolean
   onPageChange: (page: number) => void
 }) {
-  if (totalPages <= 1) return null
-
-  const pages = getVisiblePages(page, totalPages)
+  const normalizedTotalPages = Math.max(1, totalPages)
+  const normalizedPage = Math.min(Math.max(1, page), normalizedTotalPages)
+  const pages = getVisiblePages(normalizedPage, normalizedTotalPages)
   const goTo = (nextPage: number) => (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault()
-    if (!disabled && nextPage !== page && nextPage >= 1 && nextPage <= totalPages) {
+    if (
+      !disabled &&
+      nextPage !== normalizedPage &&
+      nextPage >= 1 &&
+      nextPage <= normalizedTotalPages
+    ) {
       onPageChange(nextPage)
     }
   }
@@ -40,15 +45,23 @@ export function CategoryPagination({
         <PaginationItem>
           <PaginationPrevious
             href="#"
-            onClick={goTo(page - 1)}
-            aria-disabled={disabled || page === 1}
-            className={disabled || page === 1 ? "pointer-events-none opacity-50" : undefined}
+            onClick={goTo(normalizedPage - 1)}
+            aria-disabled={disabled || normalizedPage === 1}
+            className={
+              disabled || normalizedPage === 1 ? "pointer-events-none opacity-50" : undefined
+            }
           />
         </PaginationItem>
         {pages.map((item, index) => (
           <PaginationItem key={item}>
             {index > 0 && item - pages[index - 1] > 1 ? <PaginationEllipsis /> : null}
-            <PaginationLink href="#" isActive={item === page} onClick={goTo(item)}>
+            <PaginationLink
+              href="#"
+              isActive={item === normalizedPage}
+              aria-disabled={disabled}
+              className={disabled ? "pointer-events-none opacity-50" : undefined}
+              onClick={goTo(item)}
+            >
               {item}
             </PaginationLink>
           </PaginationItem>
@@ -56,10 +69,12 @@ export function CategoryPagination({
         <PaginationItem>
           <PaginationNext
             href="#"
-            onClick={goTo(page + 1)}
-            aria-disabled={disabled || page === totalPages}
+            onClick={goTo(normalizedPage + 1)}
+            aria-disabled={disabled || normalizedPage === normalizedTotalPages}
             className={
-              disabled || page === totalPages ? "pointer-events-none opacity-50" : undefined
+              disabled || normalizedPage === normalizedTotalPages
+                ? "pointer-events-none opacity-50"
+                : undefined
             }
           />
         </PaginationItem>
