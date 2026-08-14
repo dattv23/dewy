@@ -165,12 +165,15 @@ function AdminSidebar({ userName }: { userName: string }) {
           <SidebarMenuItem>
             <SidebarMenuButton asChild size="lg" tooltip="Admin Dewy">
               <Link href={ROUTES.admin}>
-                <div className="bg-sidebar-primary flex size-8 items-center justify-center overflow-hidden rounded-lg">
-                  <BrandMark className="size-7 rounded-md bg-white" />
+                <div
+                  className="flex size-9 shrink-0 items-center justify-center overflow-hidden group-data-[collapsible=icon]:size-8"
+                  aria-hidden
+                >
+                  <BrandMark className="size-9 shrink-0 scale-160 group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:scale-150" />
                 </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">Dewy Admin</span>
-                  <span className="text-muted-foreground truncate text-xs">Vận hành nội bộ</span>
+                <div className="flex min-w-0 flex-1 flex-col text-left">
+                  <p className="truncate text-sm font-semibold">Dewy Admin</p>
+                  <p className="text-muted-foreground truncate text-sm">Vận hành nội bộ</p>
                 </div>
               </Link>
             </SidebarMenuButton>
