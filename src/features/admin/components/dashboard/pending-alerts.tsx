@@ -5,14 +5,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 export function PendingAlerts() {
   return (
-    <Card>
-      <CardHeader>
+    <Card className="xl:gap-3 xl:py-4">
+      <CardHeader className="xl:gap-1 xl:px-4">
         <CardTitle>Cần xử lý</CardTitle>
         <CardDescription>Ưu tiên trong ca hiện tại</CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col gap-3">
+      <CardContent className="flex flex-col gap-3 xl:gap-2 xl:px-4">
         {dashboardAlerts.map((item, index) => (
-          <Alert key={item}>
+          <Alert key={item} className="xl:px-3 xl:py-2">
             <CircleAlert />
             <AlertTitle>Ưu tiên {index + 1}</AlertTitle>
             <AlertDescription>{item}</AlertDescription>

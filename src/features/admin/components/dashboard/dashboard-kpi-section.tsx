@@ -15,7 +15,7 @@ export function DashboardKpiSection() {
               <div
                 key={item.label}
                 className={cn(
-                  "border-foreground/8 flex min-w-0 flex-col gap-5 border-b p-5 last:border-b-0 sm:p-6",
+                  "border-foreground/8 flex min-w-0 flex-col gap-5 border-b p-5 last:border-b-0 sm:p-6 xl:gap-3 xl:p-4",
                   "sm:last:col-span-2 sm:last:border-b-0 sm:nth-[2n+1]:border-r",
                   "xl:border-r xl:border-b-0 xl:last:col-span-1 xl:last:border-r-0",
                 )}

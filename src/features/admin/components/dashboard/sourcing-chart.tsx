@@ -27,13 +27,13 @@ const sourcingChartConfig = {
 
 export function SourcingChart() {
   return (
-    <Card>
-      <CardHeader>
+    <Card className="xl:gap-3 xl:py-4">
+      <CardHeader className="xl:gap-1 xl:px-4">
         <CardTitle>Trạng thái sourcing</CardTitle>
         <CardDescription>Phân bổ yêu cầu mỹ phẩm Hàn đang xử lý</CardDescription>
       </CardHeader>
-      <CardContent>
-        <ChartContainer config={sourcingChartConfig} className="h-64 w-full">
+      <CardContent className="xl:px-4">
+        <ChartContainer config={sourcingChartConfig} className="h-64 w-full xl:h-44">
           <BarChart data={dashboardSeries.sourcing} accessibilityLayer layout="vertical">
             <CartesianGrid horizontal={false} />
             <XAxis type="number" hide />
@@ -50,7 +50,7 @@ export function SourcingChart() {
           </BarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="text-muted-foreground gap-2 text-sm">
+      <CardFooter className="text-muted-foreground gap-2 text-sm xl:px-4">
         <PackageCheck />
         65 yêu cầu trong luồng xử lý
       </CardFooter>
