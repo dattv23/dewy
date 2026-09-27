@@ -206,7 +206,11 @@ LoginForm
   → redirect after the session is established
 ```
 
-The backend must implement `/api/auth/login`, `/api/auth/register`, and `/api/auth/google`. Google OAuth secrets must never use the `NEXT_PUBLIC_*` prefix.
+The Next.js BFF exposes `/api/auth/login`, `/api/auth/register`, and `/api/auth/google`. Google
+Identity Services obtains an ID token in the browser; the BFF forwards it to the backend's
+`/api/v1/auth/google` endpoint and stores the returned Dewy access token in an HTTP-only cookie.
+Set `NEXT_PUBLIC_GOOGLE_CLIENT_ID` to the Google OAuth Web client ID. This client ID is public by
+design; client secrets must never use the `NEXT_PUBLIC_*` prefix or be sent to the browser.
 
 ## State Management
 
