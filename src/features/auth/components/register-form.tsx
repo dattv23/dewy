@@ -18,8 +18,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { ROUTES } from "@/constants/routes"
-import { GoogleIcon } from "@/features/auth/components/google-icon"
-import { AUTH_ENDPOINTS } from "@/features/auth/constants/auth.constants"
+import { GoogleLoginButton } from "@/features/auth/components/google-login-button"
 import { registerSchema, type RegisterInput } from "@/features/auth/schemas/register.schema"
 import { register } from "@/features/auth/services/auth.service"
 import { getAuthFormError } from "@/features/auth/utils/auth-error"
@@ -63,16 +62,7 @@ export function RegisterForm() {
         </p>
       </header>
 
-      <Button
-        asChild
-        variant="outline"
-        className="h-12 w-full rounded-xl border-zinc-300 bg-white font-semibold text-zinc-800 shadow-xs hover:bg-zinc-50 hover:text-zinc-950"
-      >
-        <a href={AUTH_ENDPOINTS.google}>
-          <GoogleIcon />
-          Tiếp tục với Google
-        </a>
-      </Button>
+      <GoogleLoginButton context="signup" />
 
       <div className="my-6 flex items-center gap-3" aria-hidden="true">
         <span className="h-px flex-1 bg-zinc-200" />

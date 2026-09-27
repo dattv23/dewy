@@ -29,3 +29,22 @@ export function getAuthFormError(error: unknown, action: AuthAction): AuthFormEr
 
   return { message: AUTH_ERROR_MESSAGES.unavailable }
 }
+
+export function getGoogleAuthError(error: unknown): string {
+  if (!(error instanceof HttpRequestError)) {
+    return AUTH_ERROR_MESSAGES.unavailable
+  }
+
+  if (error.code === AUTH_ERROR_CODES.googleAccountConflict) {
+    return AUTH_ERROR_MESSAGES.googleAccountConflict
+  }
+
+  if (
+    error.code === AUTH_ERROR_CODES.invalidGoogleToken ||
+    error.code === AUTH_ERROR_CODES.invalidRequest
+  ) {
+    return AUTH_ERROR_MESSAGES.googleInvalidToken
+  }
+
+  return AUTH_ERROR_MESSAGES.unavailable
+}

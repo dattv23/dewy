@@ -4,7 +4,7 @@ import { ServerHttpError, serverHttpRequest } from "@/lib/http/server"
 
 export { ServerHttpError as AuthUpstreamError } from "@/lib/http/server"
 
-const loginResponseSchema = z.object({
+const authTokenResponseSchema = z.object({
   success: z.literal(true),
   data: z.object({
     accessToken: z.string().min(1),
@@ -23,7 +23,7 @@ type RegisterAccountInput = LoginCredentials & {
   phone: string
 }
 
-export type LoginSession = z.infer<typeof loginResponseSchema>["data"]
+export type LoginSession = z.infer<typeof authTokenResponseSchema>["data"]
 
 function normalizeAuthError(
   error: unknown,
@@ -50,7 +50,27 @@ export async function authenticate(credentials: LoginCredentials): Promise<Login
     normalizeAuthError(error, [400, 401, 504], { 400: 401 })
   }
 
-  const result = loginResponseSchema.safeParse(await response.json().catch(() => null))
+  return parseAuthTokenResponse(response)
+}
+
+export async function authenticateWithGoogle(idToken: string): Promise<LoginSession> {
+  let response: Response
+
+  try {
+    response = await serverHttpRequest(
+      "/api/v1/auth/google",
+      { method: "POST", body: JSON.stringify({ idToken }) },
+      { fallbackErrorCode: "AUTHENTICATION_UNAVAILABLE" },
+    )
+  } catch (error) {
+    normalizeAuthError(error, [400, 401, 409, 504])
+  }
+
+  return parseAuthTokenResponse(response)
+}
+
+async function parseAuthTokenResponse(response: Response): Promise<LoginSession> {
+  const result = authTokenResponseSchema.safeParse(await response.json().catch(() => null))
 
   if (!result.success) {
     throw new ServerHttpError(502, "INVALID_UPSTREAM_RESPONSE")

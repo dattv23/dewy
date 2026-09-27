@@ -23,6 +23,20 @@ export async function login(input: LoginInput, next?: string | null): Promise<Lo
   )
 }
 
+export async function loginWithGoogle(
+  idToken: string,
+  next?: string | null,
+): Promise<LoginResponse> {
+  return httpJson<LoginResponse>(
+    AUTH_ENDPOINTS.google,
+    {
+      method: "POST",
+      body: JSON.stringify({ idToken, ...(next ? { next } : {}) }),
+    },
+    { fallbackErrorCode: AUTH_ERROR_CODES.serviceUnavailable },
+  )
+}
+
 export async function register(input: RegisterInput): Promise<void> {
   return postJson(AUTH_ENDPOINTS.register, input)
 }
