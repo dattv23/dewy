@@ -7,7 +7,7 @@ import { Heart, ShoppingBag } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { addToCart } from "@/features/cart/cart-store"
-import { formatVnd, statusLabel } from "@/features/products/data/products"
+import { formatVnd, statusLabel } from "@/features/products/product-utils"
 import type { ProductCardDTO } from "@/types/product"
 
 type ProductCardProps = {
@@ -17,9 +17,7 @@ type ProductCardProps = {
 
 const statusClassMap: Record<ProductCardDTO["status"], string> = {
   in_stock: "bg-emerald-50 text-emerald-800 border-emerald-200/60",
-  low_stock: "bg-amber-50 text-amber-800 border-amber-200/60",
   out_of_stock: "bg-zinc-100 text-zinc-500 border-zinc-200",
-  sourcing: "bg-accent text-accent-foreground border-accent-foreground/15",
 }
 
 export function ProductCard({ product, showCategory }: ProductCardProps) {
@@ -88,20 +86,6 @@ export function ProductCard({ product, showCategory }: ProductCardProps) {
         >
           {product.name}
         </Link>
-
-        {/* Tags */}
-        {product.tags && product.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1">
-            {product.tags.slice(0, 2).map((tag) => (
-              <span
-                key={tag}
-                className="bg-secondary rounded px-1.5 py-0.5 text-[10px] font-medium text-zinc-600"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
 
         {/* Pricing */}
         <div className="mt-auto flex flex-wrap items-baseline gap-x-2 pt-1">

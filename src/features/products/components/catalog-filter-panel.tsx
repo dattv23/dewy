@@ -1,44 +1,26 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { statusLabel } from "@/features/products/data/products"
+import { statusLabel } from "@/features/products/product-utils"
 
 export type CatalogFilterValues = {
   status: string
-  skinType: string
   priceRange: string
   brand: string
-  benefit: string
 }
 
 type CatalogFilterPanelProps = {
   values: CatalogFilterValues
   brands: string[]
-  skinTypes: string[]
-  benefits: string[]
   onChange: (field: keyof CatalogFilterValues, value: string) => void
   onReset: () => void
 }
 
-const statuses = ["in_stock", "low_stock", "out_of_stock", "sourcing"] as const
+const statuses = ["in_stock", "out_of_stock"] as const
 
-export function CatalogFilterPanel({
-  values,
-  brands,
-  skinTypes,
-  benefits,
-  onChange,
-  onReset,
-}: CatalogFilterPanelProps) {
+export function CatalogFilterPanel({ values, brands, onChange, onReset }: CatalogFilterPanelProps) {
   return (
     <div className="min-w-0 space-y-4 pb-2">
-      <FilterSelect
-        label="Loại da"
-        ariaLabel="Lọc theo loại da"
-        value={values.skinType}
-        options={skinTypes}
-        onChange={(value) => onChange("skinType", value)}
-      />
       <FilterSelect
         label="Mức giá"
         ariaLabel="Lọc theo mức giá"
@@ -53,13 +35,6 @@ export function CatalogFilterPanel({
         value={values.brand}
         options={brands}
         onChange={(value) => onChange("brand", value)}
-      />
-      <FilterSelect
-        label="Công dụng"
-        ariaLabel="Lọc theo công dụng"
-        value={values.benefit}
-        options={benefits}
-        onChange={(value) => onChange("benefit", value)}
       />
       <div className="border-border/70 bg-secondary/20 rounded-xl border p-3.5">
         <p className="text-foreground/90 text-[13px] font-semibold tracking-wide">Tình trạng</p>

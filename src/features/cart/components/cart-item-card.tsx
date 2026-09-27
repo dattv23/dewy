@@ -2,7 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { formatVnd } from "@/features/products/data/products"
+import { formatVnd } from "@/features/products/product-utils"
 import type { CartItem } from "@/types/cart"
 
 type CartItemCardProps = {

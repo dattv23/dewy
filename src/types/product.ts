@@ -1,4 +1,4 @@
-export type ProductStatus = "in_stock" | "low_stock" | "out_of_stock" | "sourcing"
+export type ProductStatus = "in_stock" | "out_of_stock"
 
 export type ProductCardDTO = {
   id: string
@@ -7,22 +7,15 @@ export type ProductCardDTO = {
   price: number
   compareAtPrice?: number
   status: ProductStatus
-  tags: string[]
   image: string
-  categorySlug: string
-  subcategorySlug?: string
+  categorySlug?: string
+  categoryName?: string
   brand?: string
-  skinTypes?: string[]
-  highlights?: string[]
 }
 
 export type ProductDetailDTO = ProductCardDTO & {
-  brand: string
-  origin: string
-  size: string
-  skinTypes: string[]
-  shortDescription: string
-  benefits: string[]
-  directions: string[]
-  cautions: string[]
+  sku: string
+  shortDescription: string | null
+  description: string | null
+  primaryCategoryId: number | null
 }

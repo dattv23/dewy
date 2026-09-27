@@ -13,7 +13,7 @@ import {
   updateCartItemQuantity,
 } from "@/features/cart/cart-store"
 import type { CartItem } from "@/types/cart"
-import { formatVnd } from "@/features/products/data/products"
+import { formatVnd } from "@/features/products/product-utils"
 import { calculateShipping } from "@/config/commerce"
 import { PageIntro } from "@/components/website/page-intro"
 import { CartItemCard } from "@/features/cart/components/cart-item-card"

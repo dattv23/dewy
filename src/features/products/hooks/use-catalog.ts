@@ -7,10 +7,8 @@ import type { ProductCardDTO } from "@/types/product"
 
 const initialFilters: CatalogFilterValues = {
   status: "all",
-  skinType: "all",
   priceRange: "all",
   brand: "all",
-  benefit: "all",
 }
 
 export function useCatalog(products: ProductCardDTO[], initialQuery: string) {
@@ -22,8 +20,6 @@ export function useCatalog(products: ProductCardDTO[], initialQuery: string) {
   const options = useMemo(
     () => ({
       brands: unique(products.map((item) => item.brand).filter(Boolean) as string[]),
-      skinTypes: unique(products.flatMap((item) => item.skinTypes ?? [])),
-      benefits: unique(products.flatMap((item) => item.highlights ?? [])).slice(0, 8),
     }),
     [products],
   )
@@ -43,9 +39,7 @@ export function useCatalog(products: ProductCardDTO[], initialQuery: string) {
           return (
             item.name.toLowerCase().includes(query.toLowerCase()) &&
             (filters.status === "all" || item.status === filters.status) &&
-            (filters.skinType === "all" || (item.skinTypes ?? []).includes(filters.skinType)) &&
             (filters.brand === "all" || item.brand === filters.brand) &&
-            (filters.benefit === "all" || (item.highlights ?? []).includes(filters.benefit)) &&
             matchesPrice
           )
         }),

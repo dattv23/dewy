@@ -1,6 +1,5 @@
 "use client"
 
-import { useMemo } from "react"
 import { ArrowRight, ChevronDown, Search, SlidersHorizontal, X } from "lucide-react"
 import { ProductCard } from "@/features/products/components/product-card"
 import { CatalogFilterPanel } from "@/features/products/components/catalog-filter-panel"
@@ -8,7 +7,6 @@ import { useCatalog } from "@/features/products/hooks/use-catalog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { getProductsByCategory } from "@/features/products/data/products"
 import { CATALOG_CONFIG, type CatalogSort } from "@/config/catalog"
 import {
   CategoryNotFound,
@@ -17,16 +15,23 @@ import {
 } from "@/features/products/components/catalog-states"
 import { CategoryHero } from "@/features/products/components/category-hero"
 import type { Category } from "@/types/category"
+import type { ProductCardDTO } from "@/types/product"
 
 type CategoryViewProps = {
-  slug: string
   initialQuery: string
   category: Category | null
   categoryStatus: "ready" | "not-found" | "unavailable"
+  products: ProductCardDTO[]
+  productsError: boolean
 }
 
-export function CategoryView({ slug, initialQuery, category, categoryStatus }: CategoryViewProps) {
-  const products = useMemo(() => (category ? getProductsByCategory(slug) : []), [category, slug])
+export function CategoryView({
+  initialQuery,
+  category,
+  categoryStatus,
+  products,
+  productsError,
+}: CategoryViewProps) {
   const catalog = useCatalog(products, initialQuery)
 
   if (categoryStatus === "unavailable") return <CategoryUnavailable />
@@ -38,8 +43,6 @@ export function CategoryView({ slug, initialQuery, category, categoryStatus }: C
     <CatalogFilterPanel
       values={catalog.filters}
       brands={catalog.options.brands}
-      skinTypes={catalog.options.skinTypes}
-      benefits={catalog.options.benefits}
       onChange={catalog.setFilter}
       onReset={catalog.resetFilters}
     />
@@ -55,9 +58,7 @@ export function CategoryView({ slug, initialQuery, category, categoryStatus }: C
             <p className="text-xs font-semibold tracking-[0.16em] text-rose-700 uppercase">
               Khám phá bộ sưu tập
             </p>
-            <h2 className="mt-1.5 text-2xl font-semibold tracking-tight sm:text-3xl">
-              Sản phẩm nổi bật
-            </h2>
+            <h2 className="mt-1.5 text-2xl font-semibold tracking-tight sm:text-3xl">Sản phẩm</h2>
           </div>
           <p className="hidden text-sm text-zinc-500 sm:block">
             {catalog.filteredProducts.length} sản phẩm
@@ -155,7 +156,12 @@ export function CategoryView({ slug, initialQuery, category, categoryStatus }: C
         </div>
 
         <div className="min-w-0">
-          {catalog.visibleProducts.length === 0 ? (
+          {productsError ? (
+            <div className="bg-card rounded-xl border p-6 text-center">
+              <p className="text-[15px] font-medium">Không thể tải sản phẩm</p>
+              <p className="text-muted-foreground mt-2 text-sm">Vui lòng thử lại sau.</p>
+            </div>
+          ) : catalog.visibleProducts.length === 0 ? (
             <EmptyCatalog onReset={catalog.resetAll} />
           ) : (
             <>

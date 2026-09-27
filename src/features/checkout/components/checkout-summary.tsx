@@ -1,4 +1,4 @@
-import { formatVnd } from "@/features/products/data/products"
+import { formatVnd } from "@/features/products/product-utils"
 
 type CheckoutSummaryProps = {
   subtotal: number

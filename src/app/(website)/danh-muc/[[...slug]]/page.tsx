@@ -5,6 +5,7 @@ import {
   getStorefrontCategoryBySlug,
   StorefrontCategoryUpstreamError,
 } from "@/features/products/services/category.service"
+import { listStorefrontProducts, toProductCard } from "@/features/products/services/product.service"
 import { DEFAULT_CATEGORY_SLUG } from "@/constants/routes"
 import type { Category } from "@/types/category"
 
@@ -47,6 +48,14 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
   const slug = await getSlug(params)
   const { q } = await searchParams
   const result = await loadCategory(slug)
+  const productResult = result.category
+    ? await listStorefrontProducts({ categoryId: result.category.id })
+        .then((items) => ({
+          products: items.map((item) => toProductCard(item, [result.category!])),
+          productsError: false,
+        }))
+        .catch(() => ({ products: [], productsError: true }))
+    : { products: [], productsError: false }
 
-  return <CategoryView slug={slug} initialQuery={q ?? ""} {...result} />
+  return <CategoryView initialQuery={q ?? ""} {...result} {...productResult} />
 }

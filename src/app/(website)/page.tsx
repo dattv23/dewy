@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { HomeView } from "@/features/home/views/home-view"
 import { listRootCategories } from "@/features/products/services/category.service"
+import { listStorefrontProducts, toProductCard } from "@/features/products/services/product.service"
 
 export const metadata: Metadata = {
   title: "Dewy Beauty & Fashion | Editorial K-Beauty & Tìm theo yêu cầu",
@@ -9,9 +10,15 @@ export const metadata: Metadata = {
 }
 
 export default async function HomePage() {
-  const result = await listRootCategories()
+  const categoryResult = await listRootCategories()
     .then((categories) => ({ categories, categoryError: false }))
     .catch(() => ({ categories: [], categoryError: true }))
+  const productResult = await listStorefrontProducts()
+    .then((items) => ({
+      products: items.map((item) => toProductCard(item, categoryResult.categories)),
+      productError: false,
+    }))
+    .catch(() => ({ products: [], productError: true }))
 
-  return <HomeView {...result} />
+  return <HomeView {...categoryResult} {...productResult} />
 }

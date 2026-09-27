@@ -2,27 +2,23 @@
 
 import { useState } from "react"
 import { ProductCard } from "@/features/products/components/product-card"
+import type { Category } from "@/types/category"
 import type { ProductCardDTO } from "@/types/product"
 
 type HomeProductTabsProps = {
-  allProducts: ProductCardDTO[]
+  products: ProductCardDTO[]
+  categories: Category[]
 }
 
-const tabs = [
-  { id: "all", label: "Tất cả sản phẩm" },
-  { id: "best", label: "Top Bán Chạy" },
-  { id: "cham-soc-da", label: "Chăm sóc da" },
-  { id: "trang-diem", label: "Trang điểm" },
-  { id: "cham-soc-co-the", label: "Chăm sóc cơ thể" },
-]
-
-export function HomeProductTabs({ allProducts }: HomeProductTabsProps) {
+export function HomeProductTabs({ products, categories }: HomeProductTabsProps) {
   const [activeTab, setActiveTab] = useState("all")
+  const tabs = [
+    { id: "all", label: "Tất cả sản phẩm" },
+    ...categories.map((category) => ({ id: category.slug, label: category.name })),
+  ]
 
-  const filteredProducts = allProducts.filter((product) => {
+  const filteredProducts = products.filter((product) => {
     if (activeTab === "all") return true
-    if (activeTab === "best")
-      return product.tags.includes("Bán chạy") || product.tags.includes("Phổ biến")
     return product.categorySlug === activeTab
   })
 
@@ -55,6 +51,11 @@ export function HomeProductTabs({ allProducts }: HomeProductTabsProps) {
           <ProductCard key={product.id} product={product} />
         ))}
       </div>
+      {filteredProducts.length === 0 ? (
+        <p className="rounded-xl border border-zinc-200/80 bg-white px-4 py-10 text-center text-sm text-zinc-500">
+          Chưa có sản phẩm trong danh mục này.
+        </p>
+      ) : null}
     </div>
   )
 }
