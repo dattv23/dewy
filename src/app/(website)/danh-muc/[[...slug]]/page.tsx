@@ -8,6 +8,7 @@ import {
 import { listStorefrontProducts, toProductCard } from "@/features/products/services/product.service"
 import { DEFAULT_CATEGORY_SLUG } from "@/constants/routes"
 import type { Category } from "@/types/category"
+import { createPageMetadata } from "@/lib/seo"
 
 type PageProps = {
   params: Promise<{ slug?: string[] }>
@@ -37,11 +38,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const slug = await getSlug(params)
   const { category } = await loadCategory(slug)
   const categoryName = category?.name ?? "Danh mục"
+  const description =
+    category?.description ??
+    `Khám phá ${categoryName.toLowerCase()} với bộ lọc theo loại da, công dụng, mức giá và tình trạng hàng.`
 
-  return {
+  return createPageMetadata({
     title: `${categoryName} mỹ phẩm Hàn | Lọc nhanh theo nhu cầu da`,
-    description: `Khám phá ${categoryName.toLowerCase()} với bộ lọc theo loại da, công dụng, mức giá và tình trạng hàng.`,
-  }
+    description,
+    path: `/danh-muc/${slug}`,
+    image: category?.imageUrl,
+    imageAlt: category ? `${category.name} chính hãng tại Dewy` : undefined,
+    noIndex: !category,
+  })
 }
 
 export default async function CategoryPage({ params, searchParams }: PageProps) {

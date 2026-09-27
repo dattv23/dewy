@@ -1,11 +1,14 @@
 ﻿import type { Metadata } from "next"
 import { CartView } from "@/features/cart/views/cart-view"
+import { createPageMetadata } from "@/lib/seo"
 
-export const metadata: Metadata = {
-  title: "Gi? hàng | M? ph?m Hàn",
+export const metadata: Metadata = createPageMetadata({
+  title: "Giỏ hàng mỹ phẩm Hàn",
   description:
-    "Ki?m tra s?n ph?m trong gi? hàng, c?p nh?t s? lu?ng và chuy?n sang thanh toán nhanh.",
-}
+    "Kiểm tra sản phẩm trong giỏ hàng, cập nhật số lượng và chuyển sang thanh toán nhanh.",
+  path: "/gio-hang",
+  noIndex: true,
+})
 
 export default function CartPage() {
   return <CartView />

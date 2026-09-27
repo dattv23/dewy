@@ -1,11 +1,13 @@
 import type { Metadata } from "next"
 import { RegisterForm } from "@/features/auth/components/register-form"
-import { SITE_CONFIG } from "@/config/site"
+import { createPageMetadata } from "@/lib/seo"
 
-export const metadata: Metadata = {
-  title: `Đăng ký thành viên | ${SITE_CONFIG.name}`,
+export const metadata: Metadata = createPageMetadata({
+  title: "Đăng ký thành viên",
   description: "Tạo tài khoản Dewy hoặc tiếp tục với Google để mua sắm thuận tiện hơn.",
-}
+  path: "/dang-ky",
+  noIndex: true,
+})
 
 export default function RegisterPage() {
   return (
